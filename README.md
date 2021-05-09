@@ -6,7 +6,7 @@
 # 先看效果
 ![](shop1.jpg)
 ![](shop2.jpg)
-![](qrcode.jpg)
+![](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/qrcode.jpg)
 
 一般奶粉厂商控制渠道价格，在得意baby商城上的产品价格不能标低，正规公司，联系客服会得到非常实惠的价格。
 
@@ -69,8 +69,11 @@ go run ./main.go -c ./config.json
 + 注意事项
 
 一个域名可以配置多少个子域名。
+
 数据服务器可以配置子域名https://api.xxx.com:518
+
 资源服务器可以配置子域名https://res.xxx.com:443
+
 可以运行到一台云主机上，把443端口留给资源服务器，使用CDN加速此端口资源，即可。
 
 

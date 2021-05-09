@@ -1,5 +1,5 @@
 # DeYiBabyWechatShop
-[得意baby母婴微信小商城完整源代码](http://www.bestsellmall.com)
+[得意baby母婴微信小商城](http://www.bestsellmall.com)完整源代码
 
 [B站开发过程视频](https://www.bilibili.com/video/BV1jh411k72D/)
 
@@ -80,4 +80,6 @@ go run ./main.go -c ./config.json
 
 
 # 联系方式
+http://www.bestsellmall.com
+
 QQ群：963944097

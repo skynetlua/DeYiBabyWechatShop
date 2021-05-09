@@ -5,7 +5,9 @@
 
 # 先看效果
 ![商城截图1](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/shop1.jpg)
+
 ![商城截图2](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/shop2.jpg)
+
 ![商城入口](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/qrcode.jpg)
 
 一般奶粉厂商控制渠道价格，在得意baby商城上的产品价格不能标低，正规公司，联系客服会得到非常实惠的价格。

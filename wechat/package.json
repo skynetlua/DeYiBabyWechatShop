@@ -1,0 +1,28 @@
+{
+  "name": "wechat-app-mall",
+  "version": "7.4.1",
+  "description": "微信小程序商城，微信小程序微店",
+  "main": "app.js",
+  "dependencies": {
+    "apifm-wxapi": "^3.5.0",
+    "wxa-plugin-canvas": "^1.1.12",
+    "wxbarcode": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EastWorld/wechat-app-mall.git"
+  },
+  "keywords": [
+    "Q-Baby母婴生活馆"
+  ],
+  "author": "linyou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EastWorld/wechat-app-mall/issues"
+  },
+  "homepage": "https://github.com/EastWorld/wechat-app-mall#readme"
+}

@@ -1,0 +1,16 @@
+<view class="container">
+    <view class="space"></view>
+    <view class="menu-item" bindtap="uploadGoodsExcel">
+        <view class="l">上传商品Excel表格</view>
+        <image class="next" src="/images/icon/next.png"></image>
+    </view>
+    <view class="line"></view>
+    <view class="menu-item" bindtap="goodsLoadPicture">
+        <view class="l">商品自动配图</view>
+        <image class="next" src="/images/icon/next.png"></image>
+    </view>
+    <view class="space"></view>
+</view>
+
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />

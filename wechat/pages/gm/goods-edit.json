@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "商品编辑",
+  "usingComponents": {
+    "poster": "wxa-plugin-canvas/poster"
+  }
+}

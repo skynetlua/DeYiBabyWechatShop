@@ -1,0 +1,271 @@
+
+<!-- <navigator url="/pages/shop/select">
+    <view wx:if="{{shopInfo}}" class="shops-container">
+        <view class="l">
+            <image src="/images/order-details/icon-address.png"></image>
+            <text>{{shopInfo.name}}</text>
+        </view>
+        <view class="r">
+            <text>切换门店</text>
+            <image src="/images/icon/next.png"></image>
+        </view>
+    </view>
+</navigator> -->
+
+<view class="swiper-container">
+    <!-- <swiper indicator-dots="true" indicator-active-color="#fff" autoplay circular>
+        <swiper-item wx:for="{{banners}}" wx:key="id">
+            <image mode="aspectFill" bindtap="tapBanner" data-url="{{item.linkUrl}}" src="{{item.picUrl}}" />
+        </swiper-item>
+    </swiper> -->
+    <swiper class="swiper1" indicator-dots="true" indicator-active-color="#fff" autoplay circular>
+        <swiper-item wx:for="{{banners}}" wx:key="id">
+            <image mode="aspectFill" bindtap="tapBanner" data-url="{{item.linkUrl}}" src="{{item.picUrl}}" lazy-load="true" />
+        </swiper-item>
+    </swiper>
+    <view class="search">
+        <input type="text" placeholder="输入搜索关键词" value="{{name}}" bindinput="bindinput" bindconfirm="bindconfirm"></input>
+        <image src="../../images/icon/search.svg"></image>
+    </view>
+    <view wx:if="{{goodsDynamic && goodsDynamic.length > 0}}" class="goodsDynamic">
+        <swiper class="swiper2" autoplay circular vertical>
+          <navigator wx:for="{{goodsDynamic}}" wx:key="index" url="/pages/goods-details/index?id={{item.goodsId}}">
+            <swiper-item>
+              <view class="goodsDynamic-item">
+                <image mode="aspectFill" src="{{item.playerIcon}}" lazy-load="true" ></image>
+                <text>{{item.playerName}} 购买了 {{item.goodsName}}</text>
+              </view>
+            </swiper-item>
+          </navigator>
+        </swiper>
+    </view>
+</view>
+<view class="category-container">
+<view class="category-box">
+    <view class="category-list" wx:for="{{categories}}" wx:key="id">
+        <view class="category-column" bindtap="tabClick" id="{{item.id}}">
+            <block wx:if="{{item.id <= 10}}">
+                <image mode="aspectFill" class="category-imgbox" src="../../images/cate/{{item.id}}.png"></image>
+            </block>
+            <block wx:else>
+                <image mode="aspectFill" class="category-imgbox" src="{{item.icon}}" lazy-load="true"></image>
+            </block>
+            <view class="category-title">{{item.name}}</view>
+        </view>
+    </view>
+</view>
+</view>
+<view class="notice-box" wx:if="{{noticeList}}">
+  <swiper class="notice_swiper" vertical autoplay circular interval="8000">
+    <swiper-item wx:for="{{noticeList}}" wx:key="id">
+      <van-notice-bar mode="link" text="{{ item.title }}" background="#FFFFFF" data-id="{{ item.id }}" speed="30" bind:click="goNotice">
+        <image slot="left-icon" class="notice-icon" src="../../images/home/notice.png"></image>
+      </van-notice-bar>
+    </swiper-item>
+  </swiper>
+</view>
+<!-- <view class="space"></view> -->
+<view class="container">
+    <!-- <block wx:for="{{categories}}" wx:key="id" wx:if="{{item.goods}}">
+        <view class="category-goods-title">
+            <view class="weui-panel__hd">{{item.name}}</view>
+            <view class="more">
+                <navigator url="/pages/goods/list?categoryId={{item.id}}">更多 ></navigator>
+            </view>
+        </view>
+        <view class="goods-container">
+            <view class="goods-box" wx:for="{{item.goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
+                <view class="img-box">
+                    <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+                </view>
+                <view class="goods-title">{{item.name}}</view>
+                <view style='display:flex;'>
+                    <view class="goods-price">¥ {{item.minPrice}}</view>
+                    <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" 
+                        class="goods-price" style='color:#aaa;text-decoration:line-through'>¥ {{item.originalPrice}}</view>
+                </view>
+            </view>
+        </view>
+    </block> -->
+
+    <!-- 秒杀开始 -->
+    <block wx:if="{{seckillGoods && seckillGoods.length > 0}}">
+        <view class="space"></view>
+        <van-divider custom-class="table-text" contentPosition="center">
+          <image class="table-icon-miaosha" src="../../images/home/miaosha.png"></image>限时秒杀
+        </van-divider>
+
+        <view class="miaosha-container">
+          <navigator class="miaosha-goods-list" style="background: #fff;" wx:for="{{seckillGoods}}" wx:key="id" url="/pages/goods-details/index?id={{item.id}}">
+            <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+            <view class="r">
+              <view class="goods-title">{{item.name}}</view>
+              <view class="count-down" wx:if="{{item.startInterval > 0 || item.endInterval > 0}}">
+                <van-count-down wx:if="{{item.startInterval > 0}}" time="{{item.startInterval}}" format="距离开始: HH 时 mm 分 ss 秒" />
+                <van-count-down wx:if="{{item.startInterval <= 0 && item.endInterval > 0}}" time="{{item.endInterval}}" format="剩余: HH 时 mm 分 ss 秒" />
+              </view>
+              <view class="miaosha-price-btn">
+                <view class="price" style="margin-right: 10px;">￥{{item.sellPrice/100}} <text>￥{{item.originPrice/100}}</text></view>
+                <van-button custom-class="msbtn" wx:if="{{item.startInterval > 0}}" type="danger" size="small" round plain disabled>未开始</van-button>
+                <van-button custom-class="msbtn" wx:if="{{item.endInterval <= 0}}" type="danger" size="small" round>已结束</van-button>
+                <van-button custom-class="msbtn" wx:if="{{item.numberStore <= 0}}" type="danger" size="small" round>已抢完</van-button>
+                <van-button custom-class="msbtn" wx:if="{{item.startInterval <= 0 && item.endInterval > 0 && item.numberStore > 0}}" type="danger" size="small" round>立即抢购</van-button>
+              </view>
+            </view>
+          </navigator>
+        </view>
+    </block>
+    <!-- 秒杀结束 -->
+    
+    <!-- <block wx:if="{{teamGoods && teamGoods.length > 0}}">
+        <view class='space'></view>
+        <van-divider custom-class="table-text" contentPosition="center">
+            <image class="table-icon-pingtuan" src="../../images/home/pingtuan.png"></image>双人拼团
+        </van-divider>
+
+        <view class="miaosha-container">
+            <navigator class="miaosha-goods-list" style="background: #fff;" wx:for="{{teamGoods}}" wx:key="id" url="/pages/goods-details/index?id={{item.id}}">
+                <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+                <view class="r">
+                    <view class="goods-title">{{item.name}}</view>
+                    <view class="count-down" wx:if="{{item.startInterval > 0 || item.endInterval > 0}}">
+                        <van-count-down wx:if="{{item.startInterval > 0}}" time="{{item.startInterval}}" format="距离开始: HH 时 mm 分 ss 秒" />
+                        <van-count-down wx:if="{{item.startInterval <= 0 && item.endInterval > 0}}" time="{{item.endInterval}}" format="剩余: HH 时 mm 分 ss 秒" />
+                    </view>
+                    <view class="miaosha-price-btn">
+                        <view class="price" style="margin-right: 10px;">￥{{item.sellPrice/100}} <text>￥{{item.originPrice/100}}</text></view>
+                        <van-button custom-class="msbtn" wx:if="{{item.startInterval > 0}}" type="danger" size="small" round plain disabled>未开始</van-button>
+                        <van-button custom-class="msbtn" wx:if="{{item.endInterval <= 0}}" type="danger" size="small" round>已结束</van-button>
+                        <van-button custom-class="msbtn" wx:if="{{item.numberStore <= 0}}" type="danger" size="small" round>已抢完</van-button>
+                        <van-button custom-class="msbtn" wx:if="{{item.startInterval <= 0 && item.endInterval > 0 && item.numberStore > 0}}" type="danger" size="small" round>立即拼团</van-button>
+                    </view>
+                </view>
+            </navigator>
+        </view>
+    </block> -->
+    <block wx:if="{{teamGoods && teamGoods.length > 0}}">
+        <view class='space'></view>
+        <van-divider custom-class="table-text" contentPosition="center">
+            <image class="table-icon-pingtuan" src="../../images/home/pingtuan.png"></image>双人拼团
+        </van-divider>
+
+        <view class="miaosha-container">
+            <navigator class="miaosha-goods-list" style="background: #fff;" wx:for="{{teamGoods}}" wx:key="id" url="/pages/goods-details/index?id={{item.id}}">
+                <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+                <view class="r">
+                    <view class="goods-title">{{item.name}}</view>
+                    <view class="miaosha-price-btn">
+                        <view class="price" style="margin-right: 10px;">￥{{item.sellPrice/100}} <text>￥{{item.originPrice/100}}</text></view>
+                        <van-button custom-class="msbtn" type="danger" size="small" round>立即拼团</van-button>
+                    </view>
+                </view>
+            </navigator>
+        </view>
+    </block>
+
+    <block wx:if="{{recomGoods && recomGoods.length > 0}}">
+        <view class="space"></view>
+        <van-divider custom-class="table-text" contentPosition="center">
+            <image class="table-icon-tuijian" src="../../images/home/recommend.png"></image> 爆品推荐
+        </van-divider>
+
+        <view class="goods-container1">
+            <navigator class="goods-box1" wx:for="{{recomGoods}}" wx:key="id" url="/pages/goods-details/index?id={{item.id}}">
+                <view class="img-box">
+                    <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+                </view>
+                <view class="goods-title">{{item.name}}</view>
+                <view class="goods-price-container">
+                    <view class="goods-price">¥ {{item.sellPrice/100}}</view>
+                    <view wx:if="{{item.originPrice && item.originPrice > 0 && item.sellPrice < item.originPrice}}" class="goods-price2">¥ {{item.originPrice/100}}</view>
+                </view>
+                <van-tag wx:if="{{item.isPromote}}" class="goods-promote" type="danger">折扣促销</van-tag>
+            </navigator>
+        </view>
+    </block>
+
+    <block wx:for="{{goodsGroups}}" wx:key="categoryId" wx:for-item="group">
+        <view class='space'></view>
+        <block wx:if="{{group.pic && group.pic.length > 0}}">
+            <navigator class="goods-header-image" url="/pages/category-goods/index?id={{group.categoryId}}&name={{group.name}}">
+                <block wx:if="{{group.categoryId <= 10}}">
+                    <image class="image" mode="aspectFill" src="../../images/bar/pic{{group.categoryId}}.png"></image>
+                </block>
+                <block wx:else>
+                    <image class="image" mode="aspectFill" src="{{group.pic}}" lazy-load="true" />
+                </block>
+            </navigator>
+        </block>
+        <block wx:else>
+            <navigator class="goods-header-text" url="/pages/category-goods/index?id={{group.categoryId}}&name={{group.name}}">
+                <view style="margin-left: 20rpx;">
+                    <image class="table-icon-goodslist" src="../../images/home/goodslist.png"></image>
+                    <view style="display: inline;position: absolute;">{{group.name}}</view>
+                </view>
+                <view style="color: #a5a5a5;">更多>></view>
+            </navigator>
+        </block>
+        <view class="goods-container1">
+            <navigator class="goods-box1" wx:for="{{group.goodsList}}" wx:key="id" url="/pages/goods-details/index?id={{item.id}}">
+                <view class="img-box">
+                    <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+                </view>
+                <view class="goods-title">{{item.name}}</view>
+                <view class="goods-price-container">
+                    <view class="goods-price">¥ {{item.sellPrice/100}}</view>
+                    <view wx:if="{{item.originPrice && item.originPrice > 0 && item.sellPrice<item.originPrice}}" class="goods-price2">¥ {{item.originPrice/100}}</view>
+                </view>
+                <van-tag wx:if="{{item.isPromote}}" class="goods-promote" type="danger">折扣促销</van-tag>
+            </navigator>
+        </view>
+        <block wx:if="{{group.pic && group.pic.length > 0}}">
+            <navigator style="text-align: center;margin-left: 10rpx;margin-right: 10rpx;margin-bottom: 22rpx;" url="/pages/category-goods/index?id={{group.categoryId}}&name={{group.name}}">
+                <view style="background: #fff;padding: 20rpx 0rpx 20rpx 0rpx;">查看更多</view>
+            </navigator>
+        </block>
+    </block>
+    <view class='space'></view>
+    
+
+<!--     <view class='space'></view>
+    <van-divider custom-class="table-text" contentPosition="center">
+        <image class="table-icon-goodslist" src="../../images/home/goodslist.png"></image> 商品列表
+    </van-divider>
+    <view class="goods-container">
+        <view class="goods-box" wx:for="{{goods}}" wx:key="id" bindtap="onGoodsDetail" data-id="{{item.id}}">
+            <view class="img-box">
+                <image src="{{item.pic}}" class="image" mode="aspectFill" lazy-load="true" />
+            </view>
+            <view class="goods-title">{{item.name}}</view>
+            <view class="goods-price-container">
+                <view class="goods-price">¥ {{item.sellPrice}}</view>
+                <view wx:if="{{item.originPrice && item.originPrice > 0 && item.sellPrice<item.originPrice}}" class="goods-price2">¥ {{item.originPrice}}</view>
+                <image wx:if="{{item.isPromote}}" style="width: 36rpx; height: 36rpx;margin-left: 10px;margin-top: 10px;" src="../../images/home/recommend.png"></image>
+            </view>
+        </view>
+    </view>
+
+    <view hidden="{{loadingMoreHidden ? true : false}}" class="weui-loadmore weui-loadmore_line" style='margin-top:60rpx;margin-bottom:30rpx;'>
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多啦</view>
+    </view> -->
+</view>
+
+<block wx:if="{{gm == 1}}">
+    <view class='coupons-float' bindtap="goGM">
+        <image src="/images/service.png" animation="{{animation}}"></image>
+    </view>
+</block>
+<block wx:else>
+    <button class='coupons-float' open-type="contact">
+        <image src="/images/service.png" animation="{{animation}}"></image>
+    </button>
+</block>
+<!-- <view class='coupons-float' bindtap="goCoupons">
+    <image src="/images/gift.png"></image>
+</view> -->
+
+<!-- <navigator wx:if="{{aliveRooms}}" url="plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id={{aliveRooms[0].roomid}}">
+    <view style="bottom:200rpx;" class='coupons-float'>
+        <image src="/images/live.png"></image>
+    </view>
+</navigator> -->

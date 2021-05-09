@@ -1,0 +1,132 @@
+<van-search value="{{ inputVal }}" placeholder="请输入搜索关键词" shape="round" bind:search="bindconfirm" />
+<view class="container">
+    <!-- <view class="search">
+        <input type="text" placeholder="输入搜索关键词" value="{{name}}" bindinput="bindinput" bindconfirm="bindconfirm"></input>
+        <image src="/images/icon/search.svg" bindtap="searchTap"></image>
+    </view> -->
+
+    <view class="content-container">
+        <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true">
+            <view wx:if="{{category.level == 1}}" class="category {{selectCategoryId==category.id?'active':''}}" wx:for="{{categories}}" wx:for-item="category" wx:key="id" data-id="{{category.id}}" bindtap="onCategoryClick">
+                <view class="name {{selectCategoryId==category.id?'active':''}}">{{category.name}}</view>
+            </view>
+        </scroll-view>
+        <scroll-view class="goods-container" scroll-y="true" scroll-top="{{scrolltop}}">
+            <block wx:for="{{subTypeGroup}}" wx:key="id" wx:for-item="group">
+                <navigator url="/pages/category-goods/index?id={{curCategory.id}}&name={{group.name}}">
+                    <view class="no-data medium-category">
+                        <view class="line"></view>
+                        <view class="txt">{{group.name}}</view>
+                        <view class="line"></view>
+                    </view>
+                </navigator>
+                <view class="small-category-box">
+                    <block wx:for="{{group.list}}" wx:key="id" wx:for-item="item">
+                        <view>
+                            <navigator class="small-category" url="/pages/category-goods/index?id={{curCategory.id}}&name={{group.name}}&subtype={{item.name}}">
+                                <image mode="aspectFill" src="{{item.icon}}"></image>
+                                <view><small class="name">{{item.name}}</small></view>
+                            </navigator>
+                        </view>
+                    </block>
+                </view>
+            </block>
+            
+    
+            
+
+<!--             <navigator url="/pages/category-goods/index?id={{curCategory.id}}&name={{curCategory.name}}">
+                <van-divider style="width: 100%;" custom-class="table-text" contentPosition="center">
+                    <image class="table-icon-goodslist" src="../../images/home/goodslist.png"></image>{{curCategory.name}}
+                </van-divider>
+            </navigator>
+            <view class="small-category-box">
+                <block wx:for="{{subTypeList}}" wx:key="id" wx:for-item="item">
+                    <view>
+                        <navigator class="small-category" url="/pages/category-goods/index?id={{curCategory.id}}&name={{curCategory.name}}&subtype={{item.name}}">
+                            <image mode="aspectFill" src="{{item.icon}}"></image>
+                            <view><small class="name">{{item.name}}</small></view>
+                        </navigator>
+                    </view>
+                </block>
+            </view> -->
+
+            <!-- <block wx:for="{{categories}}" wx:key="id" wx:if="{{item.pid == categorySelected.id}}">
+                <navigator url="/pages/goods/list?categoryId={{item.id}}">
+                    <view class="no-data medium-category">
+                        <view class="line"></view>
+                        <view class="txt">{{item.name}}</view>
+                        <view class="line"></view>
+                    </view>
+                </navigator>
+                <view class="small-category-box">
+                    <navigator wx:for="{{categories}}" wx:for-item="small" wx:key="id" wx:if="{{small.pid == item.id}}" url="/pages/goods/list?categoryId={{small.id}}">
+                        <view class="small-category">
+                            <image mode="aspectFill" src="{{small.icon}}"></image>
+                            <view>{{small.name}}</view>
+                        </view>
+                    </navigator>
+                </view>
+            </block> -->
+
+ <!--            <view class="goods" wx:for="{{currentGoods}}" wx:key="id">
+                <image mode="aspectFill" class="pic" src="{{item.pic}}" data-id='{{item.id}}' bindtap="toDetailsTap">
+                </image>
+                <view class="name ellipsis" data-id='{{item.id}}' bindtap="toDetailsTap">{{item.name}}</view>
+                <view class='soldInfo' data-id='{{item.id}}' bindtap="toDetailsTap">
+                    <view class='good-price-box'>
+                        <text class="price">￥{{item.sellPrice}}</text>
+                        <view wx:if="{{item.originPrice && item.originPrice > 0 && item.sellPrice<item.originPrice}}" class="goods-price" style='color:#aaa;text-decoration:line-through'>原价 ￥{{item.originPrice}}</view>
+                    </view>
+                </view>
+                <view class='soldInfo'>
+                    <view class='good-sales-box'>
+                        <text class="number">已售 {{item.numberSell}}件</text>
+                        <image wx:if="{{item.isPromote}}" class="good-promote" src="../../images/home/recommend.png"></image>
+                    </view>
+                </view>
+                <image data-id="{{item.id}}" bindtap="addShopCar" class="car" src="/images/icon/car.svg"></image>
+            </view> -->
+
+
+            <view class="weui-loadmore weui-loadmore_line" style='margin-top:60rpx;margin-bottom:30rpx;'>
+                <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多啦</view>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+
+<block wx:if="{{skuCurGoods}}">
+    <view class="sku-mask" bindtap="closeSku"></view>
+    <view class="sku-container">
+        <view class="pop-goods-info" style="margin-bottom: 10rpx;">
+            <view class="pop-img-box">
+                <image src="{{curGoods.pic}}" class="goods-thumbnail" />
+            </view>
+            <view class="pop-goods-des">
+                <view class="pop-goods-title">{{curGoods.name}}</view>
+                <block wx:if="{{skuCurGoods.selectSku}}">
+                    <view class="pop-goods-price">¥ <text class="t1">{{skuCurGoods.selectSku.price}}</text></view>
+                </block>
+                <block wx:else>
+                    <view class="pop-goods-price">¥ <text class="t1">{{curGoods.sellPrice}}</text></view>
+                </block>
+            </view>
+        </view>
+        <view class="sku" wx:if="{{skuCurGoods.skus}}">
+            <view class="t">选择规格</view>
+            <view class="items">
+                <text class="{{item.active?'active':''}}" wx:for="{{skuCurGoods.skus}}" wx:for-item="item" wx:key="id" data-id="{{item.id}}" bindtap="skuSelect">{{item.name}}</text>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">购买数量</view>
+            <view class="num-box">
+                <text class="a" bindtap="storesJian">-</text>
+                <text class="b">{{skuCurGoods.storesBuy}}</text>
+                <text class="a" bindtap="storesJia">+</text>
+            </view>
+        </view>
+    </view>
+    <view class="sku-btn" bindtap="addCarSku">加入购物车</view>
+</block>

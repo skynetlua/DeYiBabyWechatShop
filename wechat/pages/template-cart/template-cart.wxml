@@ -1,0 +1,48 @@
+<template name="no-goods">
+    <image class="no-goods-icon" src="/images/nav/cart-off.png"></image>
+    <view class="title-box">
+        购物车空空如也～
+    </view>
+    <view class="to-index-btn" bindtap="toIndexPage">
+        去逛逛
+    </view>
+</template>
+<template name="cart-goods-list">
+    <view class="goodsList">
+        <view class="a-gooods" wx:for="{{items}}" wx:key="key">
+            <!-- <view class="a-goods-conts {{item.active? 'active':''}}" bindtouchstart="touchS"  bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}" style="{{item.left}}"> -->
+            <view class="a-goods-conts {{item.active? 'active':''}}" data-index="{{index}}">
+                <view class="goods-info">
+                    <view class="img-box">
+                        <image mode="aspectFill" src="{{item.icon}}" class="img" data-id='{{item.goodsId}}' bindtap="toDetailsTap" />
+                    </view>
+                    <view class="text-box">
+                        <view class="goods-title" data-id='{{item.goodsId}}' bindtap="toDetailsTap">{{item.name}}</view>
+                        <view wx:if="{{item.skuNames}}" class="goods-label">{{item.skuNames}}</view>
+                        <view class="goods-price" data-id='{{item.goodsId}}' bindtap="toDetailsTap">¥ {{item.price/100}}</view>
+                        <!-- <view class="buy-num">
+                            <view class="jian-btn" bindtap="jianBtnTap" data-index="{{index}}">-</view>
+                            <input type="number" value="{{item.numberBuy}}" data-id="{{item.id}}" bindinput="changeCarNumber" />
+                            <view class="jia-btn" bindtap="jiaBtnTap" data-index="{{index}}">+</view>
+                        </view> -->
+                        <view class="num-box">
+                            <text class="a" bindtap="jianBtnTap" data-index="{{index}}">-</text>
+                            <text class="b">{{item.numberBuy}}</text>
+                            <text class="a" bindtap="jiaBtnTap" data-index="{{index}}">+</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="delete-btn" data-id="{{item.id}}" catchtap="delItem">删除</view>
+                <image class="del-icon" src="/images/del.png" data-id="{{item.id}}" catchtap="delItem"></image>
+            </view>
+        </view>
+    </view>
+    <view class="jiesuan-box">
+        <view class="left-price">
+            <view class="total" hidden="{{noSelect}}">合计：¥ {{amountGoods/100}}</view>
+        </view>
+        <view class="to-pay-btn">
+            <navigator url="/pages/to-pay-order/index">去结算</navigator>
+        </view>
+    </view>
+</template>

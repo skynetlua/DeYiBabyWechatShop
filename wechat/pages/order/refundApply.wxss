@@ -1,0 +1,15 @@
+.price {
+  color:#e64340;
+  font-weight: bold;
+}
+
+.press-canvas {
+  position: absolute;
+  top: -1000px;
+  background-color: gray;
+}
+.space {
+  width: 100vw;
+  height: 16rpx;
+  background: #F4F5F9;
+}

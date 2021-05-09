@@ -1,0 +1,72 @@
+package mysqld
+
+import (
+	"fmt"
+	"bestsell/common"
+)
+
+type DB{ClassName} struct {
+    MysqlModel
+	Name string `json:"name"`
+}
+
+var db{ClassName}SafeMap common.SafeMap
+
+func GetDB{ClassName}(id int)*DB{ClassName} {
+	ret := db{ClassName}SafeMap.Get(id)
+	if ret == nil {
+		return nil
+	}
+	return ret.(*DB{ClassName})
+}
+
+func AddDB{ClassName}(item *DB{ClassName})  {
+	old := GetDB{ClassName}(item.ID)
+	if old != nil {
+		fmt.Println("DB{ClassName} repeat")
+		return
+	}
+	db{ClassName}SafeMap.Set(item.ID, item)
+}
+
+func LoadDB{ClassName}s()  {
+	var _dbItemsSlice []*DB{ClassName}
+	db.Find(&_dbItemsSlice)
+	db{ClassName}SafeMap = *common.NewSafeMap()
+	for _,item := range _dbItemsSlice{
+		db{ClassName}SafeMap.Set(item.ID, item)
+	}
+}
+
+func startDB{ClassName}()  {
+	if !db.HasTable(&DB{ClassName}{}) {
+		db.CreateTable(&DB{ClassName}{})
+	}
+	LoadDB{ClassName}s()
+}
+
+//DB{ClassName}
+func (p *DB{ClassName})Insert()  {
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Insert p.ID < 0")
+	}
+	db.Create(p)
+}
+
+func (p *DB{ClassName})Load(){
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Load p.ID < 0")
+	}
+	db.First(p, p.ID)
+}
+
+func (p *DB{ClassName})Save(){
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Save p.ID < 0")
+	}
+	db.Save(p)
+}
+
+func (p *DB{ClassName})Remove(){
+	db.Delete(p)
+}

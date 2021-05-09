@@ -1,0 +1,50 @@
+<van-search value="{{ inputVal }}" placeholder="请输入搜索关键词" shape="round" bind:search="bindconfirm" />
+<view class="container">
+    <view class="content-container">
+        <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true" style="border-right: 1px solid #aaa;">
+            <view class="category {{selectCategoryId==category.id?'active':''}}" 
+            wx:for="{{categories}}" wx:for-item="category" wx:key="id" data-id="{{category.id}}" bindtap="onCategoryClick">
+                <view class="name {{selectCategoryId==category.id?'active':''}}">{{category.name}}</view>
+            </view>
+        </scroll-view>
+
+        <scroll-view class="goods-container" scroll-y="true" scroll-top="{{scrolltop}}" wx:if='{{onLoadStatus}}'>
+            <view wx:if="{{!goodsList || goodsList.length == 0}}" class="no-data">
+                <view class="line"></view>
+                <view class="txt">暂无商品</view>
+                <view class="line"></view>
+            </view>
+            <view class="goods" wx:for="{{goodsList}}" wx:key="id">
+                <image wx:if="{{item.pic}}" style="border: 1px solid #e64340;" mode="aspectFill" class="pic" src="{{item.pic}}" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <!-- <image class='fresh-tag' src="/images/goods-description/fresh.png"></image> -->
+                </image>
+                <image wx:else style="border: 1px solid #e64340;" mode="aspectFill" class="pic" data-id='{{item.goodsId}}' bindtap="toDetailsTap"></image>
+                <!-- <view class="name ellipsis" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <span class="item-status" bindtap="statusChange">{{statusNames[item.status]}}</span>
+                    <block wx:if="{{item.mark > 0}}">
+                        <span class="item-status" bindtap="statusChange">{{markNames[item.mark]}}</span>
+                    </block>
+                    {{item.name}}
+                </view> -->
+                <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">零售价/¥：</text><text class="price" style="display: inline-block;color: red;">{{item.sellPrice/100}}</text>
+                    </view>
+                </view>
+                <!-- <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">库存/件：</text><text class="price" style="color: red;">{{item.numberStore}}</text>
+                    </view>
+                </view> -->
+                <image data-id="{{item.goodsId}}" bindtap="selectGoodsTap" class="car" src="/images/add-addr.png"></image>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />
+
+
+
+

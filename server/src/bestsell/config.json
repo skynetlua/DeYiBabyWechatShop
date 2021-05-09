@@ -1,0 +1,19 @@
+{
+  "ServerAddr": "0.0.0.0:444",
+  "Domain": "http://127.0.0.1",
+  "Mode": "api",
+  "MySqlAddr": "root:123456@tcp(:3306)/deyibaby",
+  "StaticUrl": "http://127.0.0.1:443",
+  "Appid": "xxxxxxxxxx",
+  "Subdomain": "api",
+  "HttpsCrt": "/tls/Nginx/1_www.xxx.com_bundle.crt",
+  "HttpsKey": "/tls/Nginx/2_www.xxx.com.key",
+  "Enable": {
+    "mysql": 1,
+    "https": 1,
+    "debug": 1,
+    "web": 0,
+    "map": 1,
+    "token": 1
+  }
+}

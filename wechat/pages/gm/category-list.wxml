@@ -1,0 +1,108 @@
+
+<view class="weui-panel weui-panel_access">
+    <view class="weui-panel__bd">
+        <view wx:for="{{categoryList}}" wx:key="index" class="item" data-id="{{item.id}}" bindtap="selectCategoryTap">
+        	<view class="item-icon">
+                <image x:if="{{item.icon == ''}}" class="item-icon" src="{{item.publicIcon?item.publicIcon:item.icon}}"></image>
+                <image x:else class="item-icon"></image>
+            </view>
+            <view class="item-content">
+	            <view class="item-top">
+	               <text>{{item.name}}-{{item.id}}</text>
+	            </view>
+	        </view>
+	        <view class="item-content">
+	        	<text style="border: 1px solid #e64340;">等级{{item.level}}</text>
+	        </view>
+	        <view class="item-content">
+	        	<text style="border: 1px solid #e64340;">排序{{item.order}}</text>
+	        </view>
+            <view class="item-content">
+            	<block wx:if="{{item.status == 1}}">
+                	<text style="border: 1px solid #e64340;">显示</text>
+                </block>
+                <block wx:else>
+                	<text style="border: 1px solid #e64340;">隐藏</text>
+                </block>
+            </view>
+        </view>
+        <view style="height:50px;margin-left: 5px;" bindtap="createCategoryTap">
+            <view class="item-content">
+                <text>新建目录</text>
+            </view>
+        </view>
+    </view>
+</view>
+
+<block wx:if="{{selectItem}}">
+    <view class="sku-mask" bindtap="closePopup"></view>
+    <view class="sku-container">
+        <view class="num">
+            <view class="t">目录图标：</view>
+            <view class="num-box">
+                <view wx:if="{{selectItem.icon == ''}}" class="weui-uploader__input-box">
+	                <view class="weui-uploader__input" bindtap="chooseImage"></view>
+	            </view>
+	            <image wx:else mode="aspectFill" class="pic" src="{{selectItem.icon}}" bindtap="removeIconTap"></image>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">选择资源：</view>
+            <view class="num-box">
+                <picker bindchange="onPickerChange" value="{{pickerIdx}}" range="{{pickerValues}}">
+                    <view class="weui-select">{{pickerValues[pickerIdx]}}</view>
+                </picker>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">名字：</view>
+            <view class="num-box">
+                <view class="b" style="width: 250px;">
+                    <input bindblur='watchTextInput' data-field="name" type="text" value="{{selectItem.name}}" placeholder="请输入目录名称" />
+                </view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">等级：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="level">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" type="number" value="{{selectItem.level}}" disabled />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="level">+</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">排序：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="order">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" type="number" value="{{selectItem.order}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="order">+</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">状态</view>
+            <view class="num-box">
+                <block wx:if="{{selectItem.status == 1}}">
+                    <view class="a" bindtap="statusChangeTap" style="width: 200px;">显示</view>
+                </block>
+                <block wx:else>
+                    <view class="a" bindtap="statusChangeTap" style="width: 200px;">隐藏</view>
+                </block>
+            </view>
+        </view>
+    </view>
+    <view class="sku-btn">
+        <view style="width: 50%;display: inline-block;border-right: 1px solid #000;" bindtap="requestRemove">删除目录</view>
+        <view style="width: 50%;display: inline-block;" bindtap="saveTap">保存更新</view>
+    </view>
+</block>
+
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />
+<canvas wx:if="{{pressImage}}" canvas-id='pressCanvas' class='press-canvas' style='width:{{ windowWidth }}px; height:{{ windowWidth }}px;'></canvas>

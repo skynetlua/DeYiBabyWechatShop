@@ -1,0 +1,62 @@
+<view class="weui-navbar">
+    <block wx:for="{{tabs}}" wx:key="*this">
+        <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+            <view class="weui-navbar__title">{{item}}</view>
+        </view>
+    </block>
+    <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+</view>
+
+<view wx:if="{{teamList.length <= 0}}" class="weui-loadmore weui-loadmore_line" style='margin-top:200rpx;'>
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+</view>
+
+<view wx:if="{{teamList.length > 0}}" class="weui-panel weui-panel_access">
+    <view class="weui-panel__bd">
+        <view wx:for="{{teamList}}" wx:key="*this" class="weui-media-box weui-media-box_text item">
+            <view class="item-icon">
+                <image class="item-icon" src="{{item.avatarUrl}}"></image>
+            </view>
+            <view class="item-content">
+                <view class="item-top">
+                    <text>{{item.nickname}}</text>
+                    <view bindtap="makePhoneCall" data-mobile="{{item.mobile}}" style="margin-left:15px;display: inline-block;">{{item.mobile}}</view>
+                    <text class="weui-badge" style="margin-left:5px;display: inline-block;">{{item.statusStr}}</text>
+                </view>
+                <view class="item-bottom">
+                    <text class="weui-media-box__desc" style="display: inline-block;">{{item.dateAdd}}</text>
+                </view>
+            </view>
+            <view class="weui-media-box__title weui-media-box__title_in-text">
+                <view wx:if="{{item.status == 1 || item.status == 2}}" class="btn" bindtap="doTeamTap" data-teamid="{{item.teamId}}" data-status="3">同意代销</view>
+                <view wx:if="{{item.status == 1}}" class="btn" bindtap="doTeamTap" data-teamid="{{item.teamId}}" data-status="2">条件不符</view>
+                <view wx:if="{{item.status == 3}}" class="btn" bindtap="doTeamTap" data-teamid="{{item.teamId}}" data-status="4">取消代销</view>
+            </view>
+        </view>
+    </view>
+</view>
+<!-- <image class="logo" src="/images/fxad.jpeg" mode="widthFix"></image>
+ -->
+
+<!-- <view class="page">
+    <view class="page__bd">
+        <view wx:if="{{teamList.length<=0}}" class="weui-loadmore weui-loadmore_line" style='margin-top:300rpx;'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+        </view>
+        <view wx:if="{{teamList.length>0}}" class="weui-panel weui-panel_access">
+            <view class="item" wx:for="{{teamList}}" wx:key="*this" >
+                <view class="item-line">
+                    <view class="label-name">姓名：{{item.nickname}}</view>
+                </view>
+                <view class="item-line">
+                    <view class="label-mobile">电话：{{item.mobile}}</view>
+                </view>
+                <view class="item-line-line">
+                    <view class="weui-media-box__desc">{{item.dateAdd}}</view>
+                    <view class="btn" bindtap="agreeTeamTap" data-playerId="{{item.playerId}}">同意代销</view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view> -->
+<float-menu />

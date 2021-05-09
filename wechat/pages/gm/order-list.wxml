@@ -1,0 +1,83 @@
+<view class="weui-navbar">
+    <block wx:for="{{tabs}}" wx:key="*this">
+        <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+            <view class="weui-navbar__title">{{item}}</view>
+        </view>
+    </block>
+    <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+</view>
+<view class="container">
+<!--     <view class="status-box">
+        <view bindtap="statusTap" class="status-label {{item.status == status?'active':''}}" 
+                wx:for="{{statusDatas}}" wx:key="index" data-status="{{item.status}}">
+            {{item.label}}
+        </view>
+    </view> -->
+    <view class="no-order" hidden="{{orderList ? true : false}}">
+        <image src="/images/no-order.png" class="no-order-img"></image>
+        <view class="text">暂无订单</view>
+    </view>
+
+    <view class="order-list" hidden="{{orderList ? false : true}}">
+        <view class="a-order" wx:for="{{orderList}}" wx:key="index">
+            <navigator url="/pages/order-details/index?id={{item.orderId}}&playerid={{item.playerId}}&mode=GM" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">{{item.orderNumber}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access">{{item.statusStr}}</view>
+            </navigator>
+            <scroll-view class="goods-img-container" scroll-x="true" enable-flex="true">
+                <view class="img-box" wx:for="{{goodsMap[item.orderId]}}" wx:key="index">
+                    <navigator url="/pages/goods-details/index?id={{item.goodsId}}&mode=GM">
+                        <image src="{{item.pic}}" class="goods-img"></image>
+                    </navigator>
+                </view>
+            </scroll-view>
+            <view class="goods-price">
+                共 {{item.goodsNumber}} 件商品 合计：<text class="p" >¥ {{item.amountGoods/100}}</text>
+            </view>
+            <view class="goods-price" wx:if="{{item.amountCoupon > 0}}">
+                金额/¥：<text class="p">{{item.amountGoods/100}}</text>-<text class="p">{{item.amountCoupon/100}}</text>=<text class="p">{{item.amountReal/100}}</text>
+            </view>
+
+            <view class="goods-info">
+                <view class="goods-des">
+                    <view class="remark" wx:if="{{item.remark && item.remark != ''}}">{{item.remark}}</view><view>{{item.dateAdd}} </view>
+                </view>
+            </view>
+
+            <!-- refundStatus -->
+            <view class="price-box" wx:if="{{item.refundStatus == 5}}">
+                <view class="btn active" bindtap="refundCancelTap" data-id="{{item.orderId}}" data-playerid="{{item.playerId}}">取消退款</view>
+                <view class="btn active" bindtap="refundConfirmTap" data-id="{{item.orderId}}" data-playerid="{{item.playerId}}">同意退款</view>
+            </view>
+            <view class="price-box" wx:elif="{{item.status == 1}}">
+                <view class="btn active" bindtap="sendOrderTap" data-id="{{item.orderId}}" data-playerid="{{item.playerId}}">确定发货</view>
+                <!-- <view class="btn active" bindtap="printOrderTap" data-id="{{item.orderId}}" data-playerid="{{item.playerId}}">打印订单</view> -->
+            </view>
+            <view class="price-box" wx:elif="{{item.status == 0}}">
+                <view class="btn active" bindtap="couponOrderTap" data-id="{{item.orderId}}">优惠券</view>
+                <!-- <view class="btn active" bindtap="printOrderTap" data-id="{{item.orderId}}" data-playerid="{{item.playerId}}">打印订单</view> -->
+            </view>
+        </view>
+        <view class="space"></view>
+    </view>
+    <block wx:if="{{curOrder}}">
+        <view class="sku-mask" bindtap="closePopup"></view>
+        <view class="sku-container">
+            <view class="num">
+                <view class="t">优惠金额(分钱)：</view>
+                <view class="num-box" style="padding-right: 80rpx;">
+                    <view class="a" bindtap="numMinusTap" data-field="amountCoupon">-</view>
+                    <view class="b" style="width: 250rpx;">
+                        <input style="margin-top: 5rpx;" bindblur='watchInput' data-field="amountCoupon" type="digit" value="{{curOrder.amountCoupon}}" />
+                    </view>
+                    <view class="a" bindtap="numPlusTap" data-field="amountCoupon">+</view>
+                </view>
+            </view>
+        </view>
+        <view class="sku-btn">
+            <view style="width: 50%;display: inline-block;" bindtap="requestCoupon">添加优惠券</view>
+        </view>
+    </block>
+    <view class="safeAreaOldMarginBttom safeAreaNewMarginBttom"></view>
+</view>
+<!-- <float-menu /> -->

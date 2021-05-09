@@ -1,0 +1,12 @@
+序号,名字,等级,类型,排序,控制,图标
+id,name,level,type,order,isUse,icon
+i,s,i,s,i,i,s
+_,_,_,_,_,_,_
+1000,项目1,1,index,1,1,static/api/goods/category/1.png
+2000,母婴,1,,2,1,static/api/goods/category/2.png
+3000,水果,1,,3,1,static/api/goods/category/3.png
+4000,五金,1,,4,1,static/api/goods/category/4.png
+5000,维修,1,,5,1,static/api/goods/category/5.png
+6000,项目6,1,,6,0,static/api/goods/category/6.png
+7000,项目7,1,,7,0,static/api/goods/category/7.png
+8000,项目8,1,,8,0,static/api/goods/category/8.png

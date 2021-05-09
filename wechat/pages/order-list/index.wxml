@@ -1,0 +1,136 @@
+<view class="container">
+    <view wx:if='{{!hasRefund}}' class="status-box">
+        <view bindtap="menuTap" class="status-label {{item.menuId == curMenuId?'active':''}}" wx:for="{{menuItems}}" wx:key="index" data-menuid="{{item.menuId}}">
+            {{item.label}}
+            <view wx:if="{{badges[index]}}" class="weui-badge" style="position: absolute;top: 5rpx;right: 5rpx;">{{badges[index]}}</view>
+        </view>
+    </view>
+    <view class="no-order" hidden="{{orderList&&orderList.length>0?true:false}}">
+        <image src="/images/no-order.png" class="no-order-img"></image>
+        <view class="text">暂无订单</view>
+    </view>
+    <view class="order-list" hidden="{{orderList&&orderList.length>0?false:true}}">
+        <view class="a-order" wx:for="{{orderList}}" wx:key="index" wx:for-item="order">
+            <navigator style="height: 32rpx;" url="/pages/order-details/index?id={{order.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">{{order.orderNumber}}</view>
+                <view wx:if="{{order.status==1 && order.tag==3}}" class="weui-cell__ft weui-cell__ft_in-access">拼团中</view>
+                <view wx:else class="weui-cell__ft weui-cell__ft_in-access">{{order.statusStr}}</view>
+            </navigator>
+            <scroll-view class="goods-img-container" scroll-x="true">
+                <view class="img-box" wx:for="{{goodsMap[order.id]}}" wx:key="index">
+                    <navigator url="/pages/goods-details/index?id={{item.goodsId}}">
+                        <image src="{{item.pic}}" class="goods-img"></image>
+                    </navigator>
+                </view>
+            </scroll-view>
+
+            <block wx:if="{{order.status == 0 && order.tag == 2}}">
+                <view class="goods-bottom">
+                    <view class="count-down-box">
+                        <van-tag plain color="#ffffff" text-color="#ff0000">限时秒杀</van-tag>
+                        <block wx:if="{{order.countDownTime >= 0}}">
+                            <view style="margin-left: 10rpx;">剩余时间:</view>
+                            <van-count-down style="margin-left: 6rpx;" use-slot time="{{order.countDownTime}}" data-orderid="{{order.id}}" bind:change="onCountDownChange">
+                                <text class="colon" wx:if="{{order.countDown.days && order.countDown.days > 0}}">{{order.countDown.days}}天 </text>
+                                <text class="block">{{order.countDown.hours}}</text>
+                                <text class="colon">:</text>
+                                <text class="block">{{order.countDown.minutes}}</text>
+                                <text class="colon">:</text>
+                                <text class="block">{{order.countDown.seconds}}</text>
+                            </van-count-down>
+                        </block>
+                        <block wx:else>
+                            <view style="margin-left: 10rpx;">已结束</view>
+                        </block>
+                    </view>
+                </view>
+            </block>
+            <block wx:if="{{order.tag == 3 && (order.status == 0 || order.status == 1 || order.status == 2)}}">
+                <view class="goods-bottom">
+                    <view class="count-down-box">
+                            <van-tag plain color="#ffffff" text-color="#ff0000">双人拼团</van-tag>
+                            <block wx:if="{{order.status == 0}}">
+                                <view style="margin-left: 10rpx;">需要支付开团</view>
+                            </block>
+                            <block wx:elif="{{order.status == 1}}">
+                                <block wx:if="{{order.countDownTime >= 0}}">
+                                    <view style="margin-left: 10rpx;">拼团中:</view>
+                                    <van-count-down style="margin-left: 6rpx;" use-slot time="{{order.countDownTime}}" data-orderid="{{order.id}}" bind:change="onCountDownChange">
+                                        <text class="colon" wx:if="{{order.countDown.days && order.countDown.days > 0}}">{{order.countDown.days}}天 </text>
+                                        <text class="block">{{order.countDown.hours}}</text>
+                                        <text class="colon">:</text>
+                                        <text class="block">{{order.countDown.minutes}}</text>
+                                        <text class="colon">:</text>
+                                        <text class="block">{{order.countDown.seconds}}</text>
+                                    </van-count-down>
+                                </block>
+                                <block wx:else>
+                                    <view style="margin-left: 10rpx;">已结束</view>
+                                </block>
+                            </block>
+                            <block wx:else>
+                                <view style="margin-left: 10rpx;">拼团成功</view>
+                            </block>
+                    </view>
+                </view>
+            </block>
+
+            <!-- <view class="goods-bottom">
+                <view class="count-down-box">
+                    <block wx:if="{{order.tag == 2 || order.tag == 3}}">
+                        <block wx:if="{{order.tag == 2}}">
+                            <van-tag plain color="#ffffff" text-color="#ff0000">限时秒杀</van-tag>
+                        </block>
+                        <block wx:if="{{order.tag == 3}}">
+                            <van-tag plain color="#ffffff" text-color="#ff0000">双人拼团</van-tag>
+                        </block>
+
+                        <block wx:if="{{order.countDownTime >= 0}}">
+                            <view style="margin-left: 10rpx;">剩余时间:</view>
+                            <van-count-down style="margin-left: 6rpx;" use-slot time="{{order.countDownTime}}" data-orderid="{{order.id}}" bind:change="onCountDownChange">
+                                <text class="colon" wx:if="{{order.countDown.days && order.countDown.days > 0}}">{{order.countDown.days}}天 </text>
+                                <text class="block">{{order.countDown.hours}}</text>
+                                <text class="colon">:</text>
+                                <text class="block">{{order.countDown.minutes}}</text>
+                                <text class="colon">:</text>
+                                <text class="block">{{order.countDown.seconds}}</text>
+                            </van-count-down>
+                        </block>
+
+                        <block wx:else>
+                            <view style="margin-left: 10rpx;">已结束</view>
+                        </block>
+                    </block>
+                </view>
+            </view> -->
+
+            <view class="goods-price">
+                共 {{order.goodsNumber}} 件商品 合计：<text class="p" >¥ {{order.amountReal/100}}</text>
+            </view>
+            <view class="goods-info">
+                <view class="remark" wx:if="{{order.remark && order.remark != ''}}">备注：{{order.remark}}</view>
+                <view style="display: flex;">
+                    <view class="goods-des">
+                        <view style="width: 320rpx;margin-top: 19rpx;"> {{order.dateAdd}} </view>
+                    </view>
+                     <view class="price-box" wx:if="{{order.status==0 || order.status==1 || order.status==2}}">
+                        <view wx:if="{{order.status==0}}" class="btn active" bindtap="toPayTap" data-id="{{order.id}}" data-money="{{order.amountReal}}">马上付款</view>
+                        <view wx:if="{{order.status==1 && order.tag!=3}}" class="btn" style="border:none;">
+                            <button class="btn" style="margin:0 auto;border:none;" open-type="contact" send-message-title="{{order.orderNumber}}" send-message-path="/pages/order-details/index?id={{order.id}}&playerid={{order.playerId}}" show-message-card="true">催发货</button>
+                        </view>
+                        <view wx:if="{{order.status==2}}" class="btn active" bindtap="receiveOrderTap" data-id="{{order.id}}">确认收货</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="space"></view>
+    </view>
+</view>
+<!-- <view class='coupons-float' wx:if="{{gm}}" bindtap="goGM">
+    <image src="/images/gift.png"></image>
+</view> -->
+
+<!-- <button class="menu-item" open-type="contact" send-message-title="{{firstGoods.name}}" send-message-img="{{firstGoods.pic}}" send-message-path="/pages/order-details/index?id={{orderInfo.orderId}}&playerid={{orderInfo.playerId}}" show-message-card="{{ true }}">
+            <view class="l">联系售后</view>
+            <image class="next" src="/images/icon/next.png"></image>
+        </button> -->

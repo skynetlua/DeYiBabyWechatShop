@@ -1,0 +1,87 @@
+package mysqld
+
+import (
+	"fmt"
+	"bestsell/common"
+)
+
+type DB{ClassName} struct {
+    MysqlModel
+	PlayerId int
+}
+
+func startDB{ClassName}()  {
+	if !db.HasTable(&DB{ClassName}{}) {
+		db.CreateTable(&DB{ClassName}{})
+	}
+}
+
+//DB{ClassName}Box
+type DB{ClassName}Box struct {
+	MysqlModelBox
+	PlayerId int
+	items []*DB{ClassName}
+}
+func (p *DB{ClassName}Box)Add{ClassName}(item *DB{ClassName}) {
+	item.PlayerId = p.PlayerId
+	item.Insert()
+	p.BeginWrite()
+	p.items = append(p.items, item)
+	p.EndWrite()
+}
+func (p *DB{ClassName}Box)Get{ClassName}(id int)*DB{ClassName} {
+	for _,item := range p.items {
+		if item.ID == id {
+			return item
+		}
+	}
+	return nil
+}
+func (p *DB{ClassName}Box)Get{ClassName}s()*[]*DB{ClassName} {
+	return &p.items
+}
+func (p *DB{ClassName}Box)Remove{ClassName}(id int) {
+	for idx,item := range p.items {
+		if item.ID == id {
+			p.BeginWrite()
+			p.items = append(p.items[:idx], p.items[idx+1:]...)
+			p.EndWrite()
+			item.Remove()
+			return
+		}
+	}
+}
+func GetDB{ClassName}BoxFromDB(playerId int)*DB{ClassName}Box  {
+	box := DB{ClassName}Box{
+		PlayerId:playerId,
+	}
+	db.Where("player_id = ?", playerId).Find(&box.items)
+	return &box
+}
+
+
+//DB{ClassName}
+func (p *DB{ClassName})Insert()  {
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Insert p.ID < 0")
+	}
+	db.Create(p)
+}
+
+func (p *DB{ClassName})Load(){
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Load p.ID < 0")
+	}
+	db.First(p, p.ID)
+}
+
+func (p *DB{ClassName})Save(){
+	if p.ID < 0 {
+		panic("(p *DB{ClassName})Save p.ID < 0")
+	}
+	db.Save(p)
+}
+
+func (p *DB{ClassName})Remove(){
+	db.Delete(p)
+}

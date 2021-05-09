@@ -1,0 +1,269 @@
+<view class="container">
+    <view class="swiper-container">
+        <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff" autoplay="{{!goods.videoId}}" circular>
+<!--             <swiper-item wx:if="{{goods.videoId}}">
+                <video src="{{videoMp4Src}}" autoplay="true" loop="true" style='width:100%;height:100%;'></video>
+            </swiper-item> -->
+            <swiper-item wx:for="{{goods.pics}}" wx:key="id">
+                <image src="{{item}}" class="slide-image" mode="aspectFill" lazy-load="true" />
+            </swiper-item>
+        </swiper>
+    </view>
+
+    <view class="goods-info">
+      <view class="goods-info-top-container">
+        <view class="goods-profile">
+          <view class="p"><text>¥</text> {{goods.sellPrice/100}}</view>
+          <view wx:if="{{goods.originPrice && goods.originPrice > 0 && goods.sellPrice<goods.originPrice}}"
+            class="goods-price" style='color:#aaa;text-decoration:line-through;padding: 15rpx 0rpx 0rpx 15rpx;'>
+            <text>¥</text> {{goods.originPrice/100}}</view>
+        </view>
+        <view class="goods-info-fx">
+          <view class='item left'>
+            <van-icon name="share-o" size="24px" />
+            <view class="icon-title">分享</view>
+            <button open-type='share'></button>
+          </view>
+          <view class='item' bindtap="drawSharePic">
+            <van-icon name="qr" size="24px"/>
+            <view class="icon-title">二维码</view>            
+          </view>
+        </view>
+      </view>
+      <view class="goods-title">{{goods.name}}</view>
+    </view>
+
+    <view class="goods-bottom">
+        <view class="count-down-box">
+            <block wx:if="{{(goods.mark == 2 || goods.mark == 3) && !goods.isClose}}">
+                <block wx:if="{{goods.mark == 3}}">
+                    <van-tag plain color="#ffffff" text-color="#ff0000">双人拼团</van-tag>
+                </block>
+                <block wx:if="{{goods.mark == 2}}">
+                    <van-tag plain color="#ffffff" text-color="#ff0000">限时秒杀</van-tag>
+                    <block wx:if="{{!goods.isClose}}">
+                        <view style="margin-left: 10rpx;">剩余时间:</view>
+                        <van-count-down style="margin-left: 20rpx;margin-top: -4rpx;" use-slot time="{{countDownTime}}" bind:change="onCountDownChange">
+                            <text class="colon" wx:if="{{countDownData.days && countDownData.days > 0}}">{{countDownData.days}}天 </text>
+                            <text class="block">{{countDownData.hours}}</text>
+                            <text class="colon">:</text>
+                            <text class="block">{{countDownData.minutes}}</text>
+                            <text class="colon">:</text>
+                            <text class="block">{{countDownData.seconds}}</text>
+                        </van-count-down>
+                    </block>
+                    <block wx:else>
+                        <view style="margin-left: 10rpx;">未开始</view>
+                    </block>
+                </block>
+            </block>
+        </view>
+        <!-- <view style="margin-right: 40rpx;">
+            <view wx:if="{{goods.numberStore>10}}" class="r" style="display: inline;margin-right: 40rpx;">库存 {{goods.numberStore}} 件</view>
+            <view style="display: inline;" class="r">已售 {{goods.numberSell}} 件</view>
+        </view> -->
+    </view>
+    <van-cell custom-class="vw100 vcell" center title="" border="{{false}}">
+        <view wx:if="{{goods.numberStore<10}}" class="r" style="display: inline;margin-right: 40rpx;">库存 {{goods.numberStore}} 件</view>
+        <view style="display: inline;" class="r">已售 {{goods.numberSell}} 件</view>
+    </van-cell>
+    
+    <view wx:if="{{shopInfo}}" class="shop-container">
+        <image mode="aspectFill" src="{{shopInfo.info.pic}}"></image>
+        <view class="info">
+            <view class="title">{{shopInfo.info.name}}</view>
+            <view class="address">{{shopInfo.info.address}}</view>
+        </view>
+    </view>
+
+    <view class='space'></view>
+    <block wx:if="{{goods.mark == 3}}">
+        <view class="goods-des-info">
+            <block wx:if="{{teamingCount <= 0}}">
+                <view wx:if="{{teamBuyList.length > 0}}" class="teambuy-title">这些人刚刚拼单成功，可直接参与</view>
+                <view wx:else class="teambuy-title">拼团进行中，可直接参与</view>
+            </block>
+            <block wx:else>
+                <view class="teambuy-title">{{teamingCount}}人在拼单，可直接参与</view>
+            </block>
+            
+            <view class="teambuy-content" wx:for="{{teamBuyList}}" wx:key="id">
+                <view class="teambuy-item">
+
+                    <block wx:if="{{item.childs && item.childs.length > 0}}">
+
+                        <view class="teambuy-column">
+                            <image class="teambuy-image" src="{{item.PlayerIcon}}" background-size="cover" lazy-load="true"></image>
+                            <image class="teambuy-image1" src="{{item.childs[0].PlayerIcon}}" background-size="cover" lazy-load="true"></image>
+                            <view class="teambuy-name1">{{item.PlayerName}}、{{item.childs[0].PlayerName}}</view>
+                        </view>
+
+                    </block>
+                    <block wx:else>
+
+                        <view class="teambuy-column">
+                            <image class="teambuy-image" src="{{item.PlayerIcon}}" background-size="cover" lazy-load="true"></image>
+                            <view class="teambuy-name">{{item.PlayerName}}</view>
+                        </view>
+
+                    </block>
+
+                    <view class="teambuy-column">
+                        <view wx:if="{{item.Status == 1}}" class="teambuy-right">
+                            <view class="teambuy-text1">还差<text style="color:red">1人</text>拼成</view>
+                            <view class="teambuy-time">剩余{{item.hours}}:{{item.minutes}}:{{item.seconds}}.{{item.microseconds}}</view>
+                        </view>
+
+                        <button style="height: 58rpx;" type="warn" size="mini" data-orderid="{{item.OrderId}}" bindtap="onTeamBuy"> 去拼单 </button>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </block>
+
+    <block wx:else>
+        <view class="goods-des-info">
+            <view class="label-title"> 
+                <view class="left">促销活动</view><image wx:if="{{goods.promote && goods.promote!=''}}" style="width: 36rpx; height: 36rpx;" src="../../images/home/recommend.png"></image>
+            </view>        
+            <view class="promote-text">
+                <block wx:if="{{!goods.promote || goods.promote == ''}}">
+                    <block wx:if="{{goods.mark == 2}}">
+                        秒杀活动
+                    </block>
+                </block>
+                <block wx:else>
+                    {{goods.promote}}
+                </block>
+            </view>
+            <button class="contect-text" open-type="contact" style="padding: 0;border:none;background: #ffffff;text-align: left;" 
+                send-message-title="{{goods.name}}" send-message-img="{{goods.pic}}"
+                send-message-path="/pages/goods-details/index?id={{goods.id}}" show-message-card="{{ true }}">
+                商城更新可能不及时，具体优惠价格，请联系客服。微信号：18926627466（点击联系）
+            </button>
+        </view> 
+    </block>
+
+
+    <view class='space'></view>
+    <view class="goods-des-info" id="goods-des-info">
+        <view class="label-title"> 
+            <view class="left">商品详情</view>
+        </view>
+        <view class="goods-text">
+            <!-- <wxparse data="{{goods.contents}}"></wxparse> -->
+            <block wx:for="{{goods.contents}}" wx:key="id">
+                <image src="{{item}}" mode="widthFix" lazy-load="true"></image>
+            </block>
+        </view>
+    </view>
+
+    <view class="goods-des-info" style="margin-top:35rpx;" wx:if="{{reputations}}">
+        <view class="label-title" style="border-bottom:1px solid #eee;">大家评价<text style="color:red">（{{reputations.length}}）</text>
+        </view>
+        <view class="goods-text clearfix" style="margin-top:15rpx;" wx:for="{{reputations}}" wx:key="id">
+            <view style="width:100rpx;float:left;">
+                <image style="width: 100rpx; height: 100rpx;" src="{{item.avatarUrl}}" lazy-load="true"></image>
+                <view style="text-align:center;width:100rpx;">{{item.reputeStr}}</view>
+            </view>
+            <view style="width:550rpx;float:left;margin-left:35rpx;border-bottom:1px solid #eee;">
+                <view>{{item.remark}}</view>
+                <view style="color: #B0B0B0;font-size:24rpx;">{{item.dateStr}} {{item.skuName}}</view>
+            </view>
+        </view>
+    </view>
+
+    <van-goods-action>
+        <van-goods-action-icon icon="chat-o" text="客服" open-type="contact"
+            send-message-title="{{goods.name}}" send-message-img="{{goods.pic}}"
+            send-message-path="/pages/goods-details/index?id={{goods.id}}" show-message-card="{{ true }}" />
+
+        <van-goods-action-icon icon="cart-o" text="购物车" bind:click="goShopCar" info="{{cartNum?cartNum:''}}" />
+        <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="收藏" bind:click="addFav" />
+
+        <block wx:if="{{!goods.isClose}}">
+            <block wx:if="{{goods.mark == 3}}">
+                <van-goods-action-button text="单独购买\n¥{{goods.originPrice/100}}" type="warning" bind:click="onSingleBuy" />
+                <van-goods-action-button text="立即开团\n¥{{goods.sellPrice/100}}"  bind:click="onTeamBuy" />
+            </block>
+            <block wx:elif="{{goods.mark == 2}}">
+                <van-goods-action-button text="立即秒杀 ({{countDownData.days&&countDownData.days>0?countDownData.days+'天 ':''}}{{countDownData.hours}}:{{countDownData.minutes}}:{{countDownData.seconds}})" bind:click="onToBuyClick" />
+            </block>
+            <block wx:else>
+                <van-goods-action-button text="加入购物车" type="warning" bind:click="onAddShopCartClick" />
+                <van-goods-action-button text="立即购买" bind:click="onToBuyClick" />
+            </block>
+        </block>
+        <van-goods-action-button wx:if="{{goods.isClose}}" text="已结束" />
+    </van-goods-action>
+
+    <!-- <view class="show-popup" hidden="{{hideShopPopup}}" catchtouchmove="true"> -->
+    <view class="show-popup" hidden="{{hideShopPopup}}">
+        <view class="popup-mask" bindtap="onCloseSkuPanel"></view>
+        <view class="popup-contents">
+            <view class="pop-goods-info">
+                <view class="pop-img-box">
+                    <image src="{{selectSkuIcon}}" class="goods-thumbnail" bindtap="previewImage" data-url="{{selectSkuIcon}}" lazy-load="true" />
+                </view>
+                <view class="pop-goods-des">
+                    <view class="pop-goods-title">{{goods.name}}</view>
+                    <view class="pop-goods-price">¥ <text class="t1">{{selectSkuPrice/100}}</text></view>
+                </view>
+            </view>
+
+            <block wx:if="{{skuGroups.length > 0}}">
+                <block wx:for="{{skuGroups}}" wx:key="id" wx:for-item="group">
+                    <view class="size-label-box"  wx:if="{{group.skuList && group.skuList.length > 0}}">
+                        <view class="label">选择{{group.label}}</view>
+                        <view class="label-item-box">
+                            <view class="label-item {{item.active?'active':''}}" wx:for="{{group.skuList}}" wx:key="id" bindtap="labelItemTap" data-id="{{item.id}}">
+                                    {{item.name}}
+                            </view>
+                        </view>
+                    </view>
+                </block>
+            </block>
+
+            <!-- <view class="size-label-box"  wx:if="{{goods.skus && goods.skus.length > 0}}">
+                <view class="label">选择规格</view>
+                <view class="label-item-box">
+                    <view class="label-item {{item.active?'active':''}}" wx:for="{{goods.skus}}" wx:key="id" bindtap="labelItemTap" data-id="{{item.id}}">
+                            {{item.name}}
+                    </view>
+                </view>
+            </view> -->
+
+            <view class="buy-num-box">
+                <view class="num-label">购买数量</view>
+                <view class="num-box">
+                    <view class="num-jian {{buyNumber == buyNumMin ? 'hui': ''}}" bindtap="numJianTap">-</view>
+                    <view class="num-input">
+                        <input type="number" value="{{buyNumber}}" disabled />
+                    </view>
+                    <view class="num-jia {{buyNumber== buyNumMax ? 'hui': ''}}" bindtap="numJiaTap">+</view>
+                </view>
+            </view>
+            <view wx:if="{{shopType =='addShopCar'}}" bindtap="addShopCar">
+                <view class="popup-join-btn">加入购物车</view>
+            </view>
+            <view wx:if="{{shopType =='tobuy'}}" data-shopType="{{shopType}}"  bindtap="buyNow">
+                <view class="popup-join-btn">立即购买</view>
+            </view>
+        </view>
+    </view>
+</view>
+
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />
+
+<!-- <float-menu />  -->
+<poster id="poster" config="{{posterConfig}}" bind:success="onPosterSuccess" bind:fail="onPosterFail"></poster>
+<view wx:if="{{showposterImg}}" class="popup-mask"></view>
+<view wx:if="{{showposterImg}}" class="posterImg-box">
+    <image mode="widthFix" class="posterImg" src="{{posterImg}}"></image>
+    <view class="poster-btn">
+        <button type="primary" bindtap='savePosterPic'>保存到相册</button>
+        <button type="warn" bindtap='closePoster'> 关闭 </button>
+    </view>
+<!--     <view class="btn-create" bindtap="savePosterPic">保存到相册</view>-->    
+</view>

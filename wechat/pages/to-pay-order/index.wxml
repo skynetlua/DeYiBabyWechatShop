@@ -1,0 +1,122 @@
+<view class="container">
+    <block wx:if="{{teamBuy && teamBuy >= 2}}">
+        <view class="peisong-way" style="margin-top: 20rpx;">
+            <view class="row-box">
+                <view class="row-label">双人拼团进度</view>
+            </view>
+            <view style="margin: 0 30rpx;" >
+                <van-steps steps="{{ teamBuy == 2?steps0:steps1 }}" active="0" />
+            </view>
+        </view>
+    </block>
+    <view class="peisong-way">
+        <view class="row-box">
+            <view class="row-label">配送方式</view>
+            <radio-group bindchange="radioChange">
+                <label class="radio">
+                    <block wx:if="{{amountGoods >= 90}}">
+                        <radio value="1" checked="{{sendType == 1}}" />送货上门
+                    </block>
+                    <block wx:else>
+                        <radio value="1" checked="{{sendType == 1}}" />物流配送
+                    </block>
+                </label>
+                <label class="radio">
+                    <radio value="0" checked="{{sendType == 0}}" />到店自取
+                </label>
+            </radio-group>
+        </view>
+        <view class="address-box" wx:if="{{sendType == 1}}">
+            <view class="add-address" hidden="{{!!curAddressData}}" bindtap="addAddress">
+                <image src="/images/add-addr.png"></image>
+                <view>新增收货地址</view>
+            </view>
+            <view class="show-address" hidden="{{!curAddressData}}" bindtap="selectAddress">
+                <view class="l">
+                    <view class="name-tel">{{curAddressData.linkMan}} {{curAddressData.mobile}}</view>
+                    <view class="addr-text">{{curAddressData.city}} {{curAddressData.area}} {{curAddressData.address}}</view>
+                </view>
+                <view class="r">
+                    <image class="next" src="/images/icon/next.png"></image>
+                </view>
+            </view>
+            <!-- <view class="free-address">
+                <image style="width: 36rpx;height: 36rpx;" src="../../images/notice.png"></image>
+                <view style="font-size: 32rpx;margin-left: 20rpx;color: red;">清城区 享受免费2小时送货上门服务</view>
+            </view> -->
+        </view>
+    </view>
+    <view class="goods-list">
+        <view class="list-title">商品列表</view>
+        <view class="a-goods" wx:for="{{goodsList}}" wx:key="index">
+            <view class="img-box">
+                <image src="{{item.pic}}" class="img" />
+            </view>
+            <view class="text-box">
+                <view class="arow arow01">
+                    <view class="goods-name">{{item.name}}</view>
+                    <view class="goods-price">¥ {{item.realPrice/100}}</view>
+                </view>
+                <view class="arow">
+                    <view class="goods-label" wx:if="{{item.skuName}}">
+                        规格：{{item.skuName}}
+                    </view>
+                    
+                    <!-- <view wx:if="{{item.express == 1}}" class="goods-label" style="border:1rpx solid #f00;color: #f00">2小时达</view> -->
+                    <view class="goods-num">x {{item.number}}</view>
+                </view>
+            </view>
+        </view>
+        <view class="row-box">
+            <view class="row-label">备注</view>
+            <view class="right-text">
+                <input bindinput="remarkChange" type="text" class="liuyan" placeholder="如需备注请输入" />
+            </view>
+        </view>
+    </view>
+<!--     <view class="peisong-way" hidden="{{hasNoCoupons}}">
+        <view class="row-box" style="border-bottom:none;">
+            <view class="row-label t">使用优惠券</view>
+        </view>
+        <picker bindchange="bindChangeCoupon" range="{{coupons}}" range-key="nameExt">
+            <view class="row-box" style="border-bottom:none;">
+                <view class="row-label">{{curCouponShowText}}</view>
+                <image class="next" src="/images/icon/next.png"></image>
+            </view>
+        </picker>
+    </view> -->
+
+    <view class="peisong-way" wx:if="{{firstGoods}}">
+        <button class="menu-item" open-type="contact" send-message-title="{{firstGoods.name}}" send-message-img="{{firstGoods.pic}}"
+            send-message-path="/pages/goods-details/index?id={{firstGoods.goodsId}}" show-message-card="{{ true }}">
+            <view class="l">联系客服</view>
+            <image class="next" src="/images/icon/next.png"></image>
+        </button>
+        <!-- <button class="menu-item" wx:if="{{quickBuy == 0}}" bindtap="onClearCartChange">
+            <view class="l">购物车</view><view> <checkbox style="margin-left: 4rpx;" value="1" checked="{{clearCart == 1}}" /></view> 
+        </button> -->
+    </view>
+
+    <view class="goods-info">
+        <view class="row-box">
+            <view class="row-label">商品金额</view>
+            <view class="right-text">¥ {{amountGoods/100}}</view>
+        </view>
+        <view class="row-box" wx:if="{{sendType == 1}}">
+            <view class="row-label">运费</view>
+            <view class="right-text">+ {{amountLogistics/100}}</view>
+        </view>
+        <view class="row-box" wx:if="{{amountCoupon && amountCoupon > 0}}">
+            <view class="row-label">优惠券</view>
+            <view class="right-text">- {{amountCoupon/100}}</view>
+        </view>
+    </view>
+    <view class="jiesuan-box safeAreaOldPaddingBttom safeAreaNewPaddingBttom">
+        <view class="left-price">
+            <view class="total">合计：¥ {{amountReal/100}}</view>
+        </view>
+        <button class="to-pay-btn" bindtap="goCreateOrder">提交订单</button>
+    </view>
+</view>
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />

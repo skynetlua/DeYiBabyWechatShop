@@ -1,0 +1,56 @@
+package config
+
+import (
+	"bestsell/common"
+	"fmt"
+)
+
+type Cfg{ClassName} struct {
+    //{{1
+    //}}1
+}
+
+var cfg{ClassName}Slice []*Cfg{ClassName}
+var cfg{ClassName}Map map[int]*Cfg{ClassName}
+
+func GetCfg{ClassName}Slice()*[]*Cfg{ClassName}  {
+	return &cfg{ClassName}Slice
+}
+
+func GetCfg{ClassName}(id int)*Cfg{ClassName} {
+    return cfg{ClassName}Map[id]
+	//for _,item := range cfg{ClassName}Slice{
+	//	if item.Id == id {
+	//		return item
+	//	}
+	//}
+	//return nil
+}
+
+func Init{ClassName}()  {
+    if len(cfg{ClassName}Slice)>0 {
+    		return
+    }
+	cfgName := "{ConfigName}"
+	cfgs, ok := common.ExcelDatas[cfgName]
+	if !ok {
+		fmt.Println("excel {ConfigName} is lost")
+		return
+	}
+	var _cfg{ClassName}Slice []*Cfg{ClassName}
+	var _cfg{ClassName}Map = make(map[int]*Cfg{ClassName})
+	for _, cfg := range cfgs {
+		item := &Cfg{ClassName}{}
+        //{{2
+        //}}2
+		_cfg{ClassName}Slice = append(_cfg{ClassName}Slice, item)
+		_cfg{ClassName}Map[item.Id] = item
+	}
+	cfg{ClassName}Slice = _cfg{ClassName}Slice
+	cfg{ClassName}Map = _cfg{ClassName}Map
+}
+
+func init() {
+	Init{ClassName}()
+}
+

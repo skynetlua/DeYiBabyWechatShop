@@ -1,0 +1,115 @@
+<!-- <view class="header">
+    <view class="search">
+        <input type="text" placeholder="输入搜索关键词" value="{{name}}" bindinput="bindinput" bindconfirm="bindconfirm"></input>
+        <image src="/images/icon/search.svg" bindconfirm="bindconfirm"></image>
+    </view>
+    <image class="show-type" src="/images/icon/list{{listType}}.svg" bindtap="changeShowType"></image>
+</view> -->
+<van-search shape="round" placeholder="请输入搜索关键词" bind:search="onSearch" bind:clear="onClear" />
+<!-- <view class="line"></view> -->
+<van-dropdown-menu>
+    <block wx:for="{{groups}}" wx:key="id" wx:for-item="group">
+        <van-dropdown-item value="{{group.value}}" options="{{group.options}}" bind:change="{{group.changeFunc}}" />
+        <!-- <van-dropdown-item value="{{value2}}" options="{{option2}}" bind:change="onChange2" /> -->
+    </block>
+</van-dropdown-menu>
+
+<!-- <view class="filters">
+    <view class="item {{orderBy==''?'active':''}}" data-val="" bindtap="filter">综合</view>
+    <view class="item {{orderBy=='addedDown'?'active':''}}" data-val="addedDown" bindtap="filter">新品</view>
+    <view class="item {{orderBy=='ordersDown'?'active':''}}" data-val="ordersDown" bindtap="filter">销量</view>
+    <view class="item {{orderBy=='priceUp'?'active':''}}" data-val="priceUp" bindtap="filter">价格</view>
+</view> -->
+
+<!-- <block wx:if="{{listType == 1}}">
+    <view class="list1" wx:for="{{goodsList}}" wx:key="id">
+        <navigator url="/pages/goods-details/index?id={{item.id}}">
+            <image class="img" mode="aspectFill" src="{{item.pic}}"></image>
+        </navigator>
+        <view class="goods-info">
+            <view class="title ellipsis">
+                <navigator url="/pages/goods-details/index?id={{item.id}}">{{item.name}}</navigator>
+            </view>
+            <view class="price" style="display: flex;">
+                <view>¥ {{item.sellPrice}}</view>
+            </view>
+            <view class="buy-info">
+                <view class="num">已售 {{item.numberSell}}件</view>
+                <image class="car" src="/images/icon/car.svg" data-id="{{item.id}}" bindtap="addShopCar"></image>
+            </view>
+            <van-tag wx:if="{{item.isPromote}}" class="goods-promote" type="danger">折扣促销</van-tag>
+        </view>
+    </view>
+</block> -->
+<view class="list2-box">
+    <view class="list2" wx:for="{{goodsList}}" wx:key="id">
+        <navigator url="/pages/goods-details/index?id={{item.id}}" style="height: 350rpx;">
+            <image class="img" mode="aspectFill" src="{{item.pic}}" lazy-load="true"></image>
+            <van-tag wx:if="{{item.isPromote}}" class="goods-promote" type="danger">折扣促销</van-tag>
+        </navigator>
+        <view class="goods-info">
+            <view class="title">
+                <navigator url="/pages/goods-details/index?id={{item.id}}">{{item.name}}</navigator>
+            </view>
+            <view style="display: flex;">
+                <view class="price" >¥ {{item.sellPrice/100}}</view>
+                <view wx:if="{{item.originPrice && item.originPrice > 0 && item.sellPrice<item.originPrice}}" class="goods-price2">¥ {{item.originPrice/100}}</view>
+            </view>
+            <view class="buy-info">
+                <view class="num">已售 {{item.numberSell}}件</view>
+                <image class="car" src="/images/icon/car.svg" data-id="{{item.id}}" bindtap="onAddShopCar"></image>
+            </view>
+        </view>
+    </view>
+</view>
+<view hidden="{{loadingMoreHidden ? true : false}}" class="weui-loadmore weui-loadmore_line" style='margin-top:60rpx;margin-bottom:30rpx;'>
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">没有更多啦</view>
+</view>
+
+<view class="show-popup" hidden="{{!showSkuPanel}}">
+    <view class="popup-mask" bindtap="onCloseSkuPanel"></view>
+    <view class="popup-contents">
+
+        <view class="pop-goods-info">
+            <view class="pop-img-box">
+                <!-- <image src="{{selectSkuIcon}}" class="goods-thumbnail" lazy-load="true" /> -->
+                <image src="{{selectSkuIcon}}" class="goods-thumbnail" bindtap="previewImage" data-url="{{selectSkuIcon}}" lazy-load="true" />
+            </view>
+            <view class="pop-goods-des">
+                <view class="pop-goods-title">{{curGoods.name}}</view>
+                <view class="pop-goods-price">¥ <text class="t1">{{selectSkuPrice/100}}</text></view>
+            </view>
+        </view>
+
+        <block wx:if="{{skuGroups.length > 0}}">
+            <block wx:for="{{skuGroups}}" wx:key="id" wx:for-item="group">
+                <view class="size-label-box"  wx:if="{{group.skuList && group.skuList.length > 0}}">
+                    <view class="label">选择{{group.label}}</view>
+                    <view class="label-item-box">
+                        <view class="label-item {{item.active?'active':''}}" wx:for="{{group.skuList}}" wx:key="id" bindtap="labelItemTap" data-id="{{item.id}}">
+                                {{item.name}}
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </block>
+
+        <view class="buy-num-box">
+            <view class="num-label">购买数量</view>
+            <view class="num-box">
+                <view class="num-jian {{buyNumber == 1 ? 'hui': ''}}" bindtap="numJianTap">-</view>
+                <view class="num-input">
+                    <input type="number" value="{{curGoods.buyNumber}}" disabled />
+                </view>
+                <view class="num-jia {{buyNumber== curGoods.numberStore ? 'hui': ''}}" bindtap="numJiaTap">+</view>
+            </view>
+        </view>
+ 
+        <view class="safeAreaOldPaddingBttom safeAreaNewPaddingBttom" bindtap="addCarSku">
+            <view class="popup-join-btn">加入购物车</view>
+        </view>
+    </view>
+ </view>
+
+
+            

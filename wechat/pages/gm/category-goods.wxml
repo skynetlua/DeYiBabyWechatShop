@@ -1,0 +1,189 @@
+<van-search value="{{ inputVal }}" placeholder="请输入搜索关键词" shape="round" bind:search="bindconfirm" />
+<view class="container">
+<!--     <view class="search">
+        <input type="text" placeholder="输入搜索关键词" value="{{name}}" bindinput="bindinput" bindconfirm="bindconfirm"></input>
+        <image src="/images/icon/search.svg"></image>
+    </view> -->
+    <view class="content-container">
+        <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true" style="border-right: 1px solid #aaa;">
+            <view class="category {{selectCategoryId==category.id?'active':''}}" 
+            wx:for="{{categories}}" wx:for-item="category" wx:key="id" data-id="{{category.id}}" bindtap="onCategoryClick">
+                <view class="name {{selectCategoryId==category.id?'active':''}}">{{category.name}}</view>
+            </view>
+        </scroll-view>
+
+        <scroll-view class="goods-container" scroll-y="true" scroll-top="{{scrolltop}}" wx:if='{{onLoadStatus}}'>
+            <view wx:if="{{!goodsList || goodsList.length == 0}}" class="no-data">
+                <view class="line"></view>
+                <view class="txt">暂无商品</view>
+                <view class="line"></view>
+            </view>
+            <view class="goods" wx:for="{{goodsList}}" wx:key="id">
+                <image wx:if="{{item.pic}}" style="border: 1px solid #e64340;" mode="aspectFill" class="pic" src="{{item.pic}}" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <!-- <image class='fresh-tag' src="/images/goods-description/fresh.png"></image> -->
+                </image>
+                <image wx:else style="border: 1px solid #e64340;" mode="aspectFill" class="pic" data-id='{{item.goodsId}}' bindtap="toDetailsTap"></image>
+                <view class="name ellipsis" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <span class="item-status" bindtap="statusChange">{{statusNames[item.status]}}</span>
+                    <block wx:if="{{item.mark > 0}}">
+                        <span class="item-status" bindtap="statusChange">{{markNames[item.mark]}}</span>
+                    </block>
+                    {{item.name}}
+                </view>
+                <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">零售价/¥：</text><text class="price" style="display: inline-block;color: red;">{{item.sellPrice/100}}</text>
+                    </view>
+                </view>
+                <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">库存/件：</text><text class="price" style="color: red;">{{item.numberStore}}</text>
+                    </view>
+                </view>
+                <image data-id="{{item.goodsId}}" bindtap="selectGoodsTap" class="car" src="/images/add-addr.png"></image>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+
+<block wx:if="{{selectGoods}}">
+<view class="container">
+    <view class="sku-mask" bindtap="closePopup"></view>
+    <view class="sku-container">
+        <view class="num">
+            <view class="pop-img-box">
+                <image src="{{selectGoods.pic}}" class="goods-thumbnail" />
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">商品id：</view>
+            <view class="num-box">
+                <view>{{selectGoods.goodsId}}</view>
+                <view class="a" style="border: 1px solid #ff0000;width: 120px;" bindtap="goodsEditTap">编辑商品</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">商品名称：</view>
+            <view class="num-box">
+                <view style="border: 1px solid #555555;">{{selectGoods.name}}</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">商品类别:</view>
+            <picker bindchange="categoryChange" value="{{categoryIndex}}" range="{{categoryNames}}" style="margin: 0rpx;padding: 0rpx;width: 400rpx;">
+                <view class="weui-select" style="color: #aaa;border: 1rpx solid #e64340;height: 80rpx;line-height: 80rpx;">{{categoryNames[categoryIndex]}}</view>
+            </picker>
+        </view>
+        <view class="num">
+            <view class="t">显示顺序：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="order">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="order" type="digit" value="{{selectGoods.order}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="order">+</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">零售价/¥(分钱)：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="sellPrice">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="sellPrice" type="digit" value="{{selectGoods.sellPrice}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="sellPrice">+</view>
+            </view>
+        </view>
+        <view class="num" >
+            <view class="t">原价/¥(分钱)：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="originPrice">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="originPrice" type="digit" value="{{selectGoods.originPrice}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="originPrice">+</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">库存</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="numberStore">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="numberStore" type="number" value="{{selectGoods.numberStore}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="numberStore">+</view>
+            </view>
+        </view>
+        <view class="num">
+            <view class="t">销量</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="numberSell">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="numberSell" type="number" value="{{selectGoods.numberSell}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="numberSell">+</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">商品状态</view>
+            <view class="num-box">
+                <view class="a" bindtap="statusChange" style="width: 200px;">{{statusNames[selectGoods.status]}}</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">活动</view>
+            <view class="num-box">
+                <view class="a" bindtap="markChange" data-id="0" style="width: 200px;">{{markNames[selectGoods.mark]}}</view>
+            </view>
+        </view>
+        <block wx:if="{{selectGoods.mark == 2}}">
+            <view class="num">
+                <view class="t">开始日期</view>
+                <view class="num-box">
+                    <view class="b" style="width: 210px;border:none;">
+                        <picker mode="date" value="{{startDate}}" start="{{fromDatePattern}}" end="{{toDatePattern}}" bindchange="bindStartDateChange">{{startDate}}</picker>
+                    </view>
+                </view>
+            </view>
+            <view class="num">
+                <view class="t">开始时间</view>
+                <view class="num-box">
+                    <view class="b" style="width: 210px;border:none;">
+                        <picker mode="time" value="{{startTime}}" start="{{fromTimePattern}}" end="{{toTimePattern}}" bindchange="bindStartTimeChange">{{startTime}}</picker>
+                    </view>
+                </view>
+            </view>
+            <view class="num">
+                <view class="t">结束日期</view>
+                <view class="num-box">
+                    <view class="b" style="width: 210px;border:none;">
+                        <picker mode="date" value="{{endDate}}" start="{{fromDatePattern}}" end="{{toDatePattern}}" bindchange="bindEndDateChange">{{endDate}}</picker>
+                    </view>
+                </view>
+            </view>
+            <view class="num">
+                <view class="t">结束时间</view>
+                <view class="num-box">
+                    <view class="b" style="width: 210px;border:none;">
+                        <picker mode="time" value="{{endTime}}" start="{{fromTimePattern}}" end="{{toTimePattern}}" bindchange="bindEndTimeChange">{{endTime}}</picker>
+                    </view>
+                </view>
+            </view>
+        </block>
+
+    </view>
+    <view class="sku-btn">
+        <view style="width: 50%;display: inline-block;border-right: 1px solid #000;" bindtap="closePopup">退出修改</view>
+        <view style="width: 50%;display: inline-block;" bindtap="requestUpdate">保存更新</view>
+    </view>
+</view>
+</block>
+
+<import src="/template/login/index.wxml" />
+<template is="apifmLogin" data="{{wxlogin: wxlogin}}" />
+
+
+
+

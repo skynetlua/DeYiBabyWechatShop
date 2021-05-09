@@ -1,0 +1,97 @@
+[
+{
+    "id": 1,
+    "linkUrl": "",
+    "order": 1,
+    "picUrl": "/static/api/banner/app/1.jpg",
+    "status": 1,
+    "type": "app"
+},
+{
+    "id": 3,
+    "linkUrl": "",
+    "order": 3,
+    "picUrl": "/static/api/banner/app/3.jpg",
+    "status": 1,
+    "type": "app"
+},
+{
+    "id": 4,
+    "linkUrl": "index/index",
+    "order": 1,
+    "picUrl": "/static/api/banner/index/4.jpg",
+    "status": 1,
+    "type": "index"
+},
+{
+    "id": 5,
+    "linkUrl": "index/index",
+    "order": 2,
+    "picUrl": "/static/api/banner/index/1.jpg",
+    "status": 1,
+    "type": "index"
+},
+{
+    "id": 6,
+    "linkUrl": "index/index",
+    "order": 4,
+    "picUrl": "/static/api/banner/index/2.jpg",
+    "status": 1,
+    "type": "index"
+},
+{
+    "id": 7,
+    "linkUrl": "index/indexad",
+    "order": 1,
+    "picUrl": "/static/api/banner/indexad/1.jpg",
+    "status": 1,
+    "type": "indexad"
+},
+{
+    "id": 8,
+    "linkUrl": "",
+    "order": 1,
+    "picUrl": "/static/api/banner/new/1.png",
+    "status": 1,
+    "type": "new"
+},
+{
+    "id": 9,
+    "linkUrl": "",
+    "order": 2,
+    "picUrl": "/static/api/banner/new/2.png",
+    "status": 1,
+    "type": "new"
+},
+{
+    "id": 10,
+    "linkUrl": "",
+    "order": 3,
+    "picUrl": "/static/api/banner/new/3.png",
+    "status": 1,
+    "type": "new"
+},
+{
+    "id": 11,
+    "linkUrl": "",
+    "order": 1,
+    "picUrl": "/static/api/banner/score/1.png",
+    "status": 1,
+    "type": "score"
+},
+{
+    "id": 12,
+    "linkUrl": "",
+    "order": 2,
+    "picUrl": "/static/api/banner/score/2.png",
+    "status": 1,
+    "type": "score"
+},
+{
+    "id": 13,
+    "linkUrl": "",
+    "order": 3,
+    "picUrl": "/static/api/banner/score/3.png",
+    "status": 1,
+    "type": "score"
+}]

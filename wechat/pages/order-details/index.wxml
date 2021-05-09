@@ -1,0 +1,193 @@
+<view class="container">
+    <block wx:if="{{orderInfo.teamBuy == 2 && orderInfo.status >= 0 && orderInfo.status <= 2}}">
+        <view class="peisong-way" style="margin-bottom: 0rpx;margin-top: 20rpx;">
+            <view class="row-box">
+                <view class="row-label">双人拼团进度</view>
+            </view>
+            <view style="margin: 0 30rpx;" >
+                <van-steps steps="{{ steps }}" active="{{ orderInfo.status }}" />
+            </view>
+        </view>
+    </block>
+
+    <view class="sec-wrap">
+        <view class="order-status">
+            <view class="icon-box">
+                <image wx:if="{{orderInfo.status<=-1}}" class="icon" src="/images/order-details/icon-ddgb.png"></image>
+                <image wx:elif="{{orderInfo.status==0}}" class="icon" src="/images/order-details/icon-ddfk.png"></image>
+                <image wx:elif="{{orderInfo.status==1}}" class="icon" src="/images/order-details/icon-ddfh.png"></image>
+                <image wx:elif="{{orderInfo.status==2}}" class="icon" src="/images/order-details/icon-ddsh.png"></image>
+                <image wx:elif="{{orderInfo.status==3 || orderInfo.status==4}}" class="icon" src="/images/order-details/icon-jycg.png"></image>
+            </view>
+            <view class="right-text">
+                <view class="status red">{{orderInfo.statusStr}}</view>
+                <!-- <view class="des" hidden="true">请于11时59分59秒内付款，超时订单将自动关闭</view> -->
+            </view>
+        </view>
+
+        <block wx:if="{{logistics}}">
+            <view wx:if="{{orderInfo && orderInfo.status>1 && logisticsTraces}}" class="wuliu-box">
+                <view class="icon-box">
+                    <image class="icon" src="/images/order-details/icon-wuliu.png"></image>
+                </view>
+                <view class="right-text" bindtap="wuliuDetailsTap" data-id="{{orderInfo.orderId}}">
+                    <view class="order-number">快递单号：{{logistics.trackNumber}}</view>
+                    <block wx:if="{{logisticsTraces}}">
+                        <view class="wuliu-text">{{logisticsTraces[logisticsTraces.length-1].AcceptStation}}</view>
+                        <view class="wuliu-date">{{logisticsTraces[logisticsTraces.length-1].AcceptTime}}</view>
+                    </block>
+                </view>
+                <view class="arrow-right">
+                    <image class="arrow" src="/images/arrow-right.png"></image>
+                </view>
+            </view>
+            <view wx:elif="{{orderInfo && orderInfo.status>1}}" class="wuliu-box">
+                <block wx:if="{{logistics.sendType != 0}}">
+                    <view class="icon-box">
+                        <image class="icon" src="/images/order-details/icon-wuliu.png"></image>
+                    </view>
+                    <view class="right-text">
+                        <view class="order-number">快递单号：{{logistics.trackNumber}}</view>
+                        <view class="wuliu-text">暂无物流信息</view>
+                    </view>
+                </block>
+                <block wx:else>
+                    <view class="wuliu-text">门店自提</view>
+                </block>
+            </view>
+            <view wx:else class="wuliu-box">
+                <block wx:if="{{logistics.sendType != 0}}">
+                    <block wx:if="{{orderInfo.amountGoods > 90}}">
+                        <view class="wuliu-text">送货上门</view>
+                    </block>
+                    <block wx:else>
+                        <view class="wuliu-text">物流配送</view>
+                    </block>
+                </block>
+                <view wx:else class="wuliu-text">门店自提</view>
+            </view>
+            <view wx:if="{{logistics.mobile}}" class="address-sec">
+                <view class="icon-box">
+                    <image class="icon" src="/images/order-details/icon-address.png"></image>
+                </view>
+                <view class="right-box">
+                    <view class="name-tel">{{logistics.linkMan}} {{logistics.mobile}}</view>
+                    <view class="text">
+                        {{logistics.provinceStr}} {{logistics.cityStr}} {{logistics.areaStr}} {{logistics.address}}
+                    </view>
+                </view>
+            </view>
+<!--             <view wx:if="{{logistics.shippingMethod == 0}}" class="free-address">
+                <image style="width: 36rpx;height: 36rpx;" src="../../images/notice.png"></image>
+                <view style="font-size: 32rpx;margin-left: 20rpx;color: red;">清城区 享受免费2小时送货上门服务</view>
+            </view> -->
+        </block>
+    </view>
+
+    <!-- <view wx:if="{{orderInfo.hxNumber && orderInfo.status > 0}}" class="goods-list">
+        <view class="list-title hx-title">核销码</view>
+        <canvas class="hx-canvas" canvas-id="qrcode" />
+    </view> -->
+
+    <view class="goods-list">
+        <view class="list-title">商品信息</view>
+        <form bindsubmit="submitReputation">
+            <block wx:for="{{goodsList}}" wx:key="index">
+                <navigator url="/pages/goods-details/index?id={{item.goodsId}}">
+                    <view class="a-goods">
+                        <view class="img-box">
+                            <image src="{{item.pic}}" class="img" />
+                        </view>
+                        <view class="text-box">
+                            <view class="arow arow01">
+                                <view class="goods-name">{{item.name}}</view>
+                                <view class="goods-price">¥ {{item.realPrice/100}}</view>
+                            </view>
+                            <view class="arow">
+                                <view class="goods-label">{{item.skuName}}</view>
+                                <!-- <view wx:if="{{item.express == 1}}" class="goods-label" style="border:1rpx solid #f00;color: #f00">2小时达</view> -->
+                                <view class="goods-num">x {{item.number}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </navigator>
+                <view class="btn-row" wx:if="{{orderInfo.status==3}}">
+                    <view class="section section_gap">
+                        <view style="margin-top:35rpx;margin-bottom:35rpx;">评价：</view>
+                        <radio-group name="repute{{index}}">
+                            <label style="margin-right:35rpx;"><radio value="2" checked />好评</label>
+                            <label style="margin-right:35rpx;"><radio value="1" />中评</label>
+                            <label style="margin-right:35rpx;"><radio value="0" />差评</label>
+                        </radio-group>
+                    </view>
+                    <view class="row-box" style="margin-top:35rpx">
+                        <!-- <view class="row-label">备注</view> -->
+                        <input name="goodsId{{index}}" value="{{item.goodsId}}" style="display:none;" />
+                        <textarea name="remark{{index}}" style="margin-top:35rpx;width:95%;height: 180rpx;border: 1rpx solid #a7a7a7;" value="非常愉快的一次购物！" />
+                    </view>
+                </view>
+            </block>
+            <view class="btn-row" wx:if="{{orderInfo.status==3}}">
+<!--                 <navigator style="float:right;" class="confirm-btn" target="miniProgram" app-id="wx56c8f077de74b07c" path="/open/order-comment/order-comment?appid={{appid}}&order_id={{orderInfo.orderNumber}}">去购物单评价</navigator>
+ -->                
+                <button style="float:right;" class="confirm-btn" formType="submit">提交评价</button>
+            </view>
+        </form>
+        <form bindsubmit="confirmBtnTap" report-submit="true">
+            <view class="btn-row" wx:if="{{orderInfo.status==2 && mode != 'GM'}}">
+                <button class="confirm-btn" formType="submit">确认收货</button>
+            </view>
+        </form>
+    </view>
+
+<!--     <view wx:if="{{goodsCoupons}}" class="goods-info" style="margin-bottom:32rpx;">
+        <view wx:for="{{goodsCoupons}}" wx:key="{{item.id}}" class="row-box">
+            <view wx:if="{{item.type == 0}}" class="row-label">优惠券</view>
+            <view wx:if="{{item.type == 0}}" class="right-text">{{item.coupon}}</view>
+            <image mode="widthFix" wx:if="{{item.type == 1}}" src="{{item.coupon}}" style="max-width:100%;"></image>
+        </view>
+    </view> -->
+
+    <view class="goods-info">
+        <view class="row-box">
+            <view class="row-label">商品金额</view>
+            <view class="right-text">+ {{orderInfo.amountGoods/100}}</view>
+        </view>
+        <view wx:if="{{orderInfo.amountCoupon && orderInfo.amountCoupon > 0}}" class="row-box">
+            <view class="row-label">优惠券</view>
+            <view class="right-text">- {{orderInfo.amountCoupon/100}}</view>
+        </view>
+        <view class="row-box">
+            <view class="row-label">运费</view>
+            <view class="right-text">+ {{orderInfo.amountLogistics/100}}</view>
+        </view>
+        <view class="row-box">
+            <view class="row-label">总金额</view>
+            <view class="right-text">¥ {{orderInfo.amountReal/100}}</view>
+        </view>
+    </view>
+
+    <view class="peisong-way">
+        <button class="menu-item" open-type="contact" send-message-title="{{firstGoods.name}}" send-message-img="{{firstGoods.pic}}" send-message-path="/pages/order-details/index?id={{orderInfo.orderId}}&playerid={{orderInfo.playerId}}" show-message-card="{{ true }}">
+            <view class="l">联系售后</view>
+            <image class="next" src="/images/icon/next.png"></image>
+        </button>
+    </view>
+
+    <view class="bottom-bar" wx:if="{{mode != 'GM'}}">
+        <view wx:if="{{orderInfo.status==0}}">
+            <button class="bottom-certain-btn" type="warn" bindtap='toPayTap' data-id="{{orderInfo.orderId}}" data-money="{{orderInfo.amountReal}}">马上付款</button>
+            <button class="bottom-certain-btn"  bindtap='toCancelTap'>取消订单</button>
+        </view>
+        <view wx:elif="{{orderInfo.status<0 && orderInfo.status > -10}}">
+            <button class="bottom-certain-btn"  bindtap='toDeleteTap'>删除订单</button>
+        </view>
+        <view wx:elif="{{orderInfo.status>0}}">
+            <button class="bottom-certain-btn" bindtap="refundApply">申请售后</button>
+            <block wx:if="{{orderInfo.status==3 || orderInfo.status==4}}">
+                <button class="bottom-certain-btn" bindtap='toHideTap'>删除订单</button>
+            </block>
+        </view>
+    </view>
+    
+</view>

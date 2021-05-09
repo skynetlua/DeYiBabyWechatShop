@@ -1,0 +1,225 @@
+.container{
+    width: 100%;
+    background-color: #F2f2f2;
+}
+.status-box{
+    width:100%;
+    height: 88rpx;
+    line-height: 88rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+.status-box .status-label{
+    width: 150rpx;
+    height: 100%;
+    text-align: center;
+    font-size:28rpx;
+    color:#353535;
+    box-sizing: border-box;
+    position: relative;
+}
+.status-box .status-label.active{
+    color:#e64340;
+    border-bottom: 6rpx solid #e64340;
+}
+.no-order{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 88rpx;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding-top: 203rpx;
+    background-color: #F2f2f2;
+}
+.no-order-img{
+    width: 81rpx;
+    height: 96rpx;
+    margin-bottom: 31rpx;
+}
+.no-order .text{
+    font-size:28rpx;
+    color:#999999;
+    text-align: center
+}
+.order-list{
+    width: 100%;
+}
+.order-list .a-order{
+    width: 100%;
+    background-color: #fff;
+    margin-top: 20rpx;
+}
+.a-order  .goods-info,
+.goods-img-container{
+    width: 720rpx;
+    margin-left: 30rpx;
+    border-top: 1rpx solid #eee;
+    padding: 30rpx 0;
+    display: flex;
+    align-items: center;
+}
+.goods-price {
+  font-size:26rpx;
+  width:720rpx;
+  text-align: right;
+  margin-bottom:30rpx;
+}
+.goods-price .p {
+  font-size:36rpx;
+  color:#e64340;
+}
+.goods-info .img-box{
+    width: 120rpx;
+    height: 120rpx;
+    overflow: hidden;
+    margin-right: 30rpx;
+    background-color: #f7f7f7;
+}
+.goods-info .img-box .goods-img,
+.goods-img-container .img-box .goods-img{
+    width: 120rpx;
+    height: 120rpx;
+}
+.goods-info  .goods-des{
+    font-size:26rpx;
+    color:#000000;
+}
+.goods-img-container{
+    height: 180rpx;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+.goods-img-container .img-box{
+    width: 120rpx;
+    height: 120rpx;
+    overflow: hidden;
+    margin-right: 20rpx;
+    background-color: #f7f7f7;
+    display: inline-block;
+}
+.price-box{
+    width: 720rpx;
+    display: flex;
+    flex-direction:row-reverse;
+    padding-bottom: 30rpx;
+}
+.price-box .btn{
+    width: 166rpx;
+    height: 60rpx;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 60rpx;
+    border: 1rpx solid #ccc;
+    border-radius: 6rpx;
+    margin-left: 20rpx;
+    font-size:26rpx;
+}
+.price-box .active{
+    border:1px solid #e64340;
+    color: #e64340;
+}
+.remark {
+  color:#e64340;
+  margin-bottom: 20rpx;
+}
+.space {
+  width: 100vw;
+  height: 16rpx;
+  background: #F4F5F9;
+}
+
+
+
+.sku-mask {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.sku-container {
+  position: fixed;
+  width: 100vw;
+  bottom: 90rpx;
+  left: 0;
+  background: #fff;
+  padding: 32rpx 32rpx 0 32rpx;
+}
+.sku-container .close {
+  position: absolute;
+  width: 54rpx;
+  height: 54rpx;
+  top: 16rpx;
+  right: 16rpx;
+  /* border: 1rpx solid #666;
+  border-radius: 50%; */
+}
+.sku-container .sku {
+  border-bottom: 1rpx solid #eee;
+  padding-bottom: 24rpx;
+  margin-bottom: 16rpx;
+}
+.sku-container .sku .t {
+  color: #333;
+}
+.sku-container .sku .items {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sku-container .sku .items text {
+  padding: 8rpx;
+  border: 1rpx solid #999;
+  color: #999;
+  margin: 24rpx 24rpx 0 0;
+  font-size: 26rpx;
+  border-radius: 12rpx;
+}
+.sku-container .sku .items text.active {
+  border: 1rpx solid #e64340;
+  color: #e64340;
+}
+.sku-container .num {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.sku-container .num .t {
+  color: #333;
+}
+.sku-container .num .num-box {
+  display: flex;
+}
+.sku-container .num .num-box .a {
+  width: 64rpx;
+  height: 64rpx;
+  border: 1rpx solid #999;
+  text-align: center;
+  line-height: 64rpx;
+  font-size: 46rpx;
+  color: #666;
+}
+.sku-container .num .num-box .b {
+  color: #333;
+  line-height: 64rpx;
+  padding: 0 32rpx;
+  border-top: 1rpx solid #999;
+  border-bottom: 1rpx solid #999;
+}
+.sku-btn {
+  width: 100vw;
+  height: 90rpx;
+  line-height: 90rpx;
+  background: #e64340;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+}

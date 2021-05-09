@@ -1,0 +1,163 @@
+<view class="container">
+    <view class="search">
+        <input type="text" placeholder="输入搜索关键词" value="{{name}}" bindinput="bindinput" bindconfirm="bindconfirm"></input>
+        <image src="/images/icon/search.svg"></image>
+    </view>
+
+    <view class="content-container">
+        <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true" style="border-right: 1px solid #aaa;">
+            <view class="category {{selectCategoryId==category.id?'active':''}}" 
+            wx:for="{{categories}}" wx:for-item="category" wx:key="id" data-id="{{category.id}}" bindtap="onCategoryClick">
+                <view class="name {{selectCategoryId==category.id?'active':''}}">{{category.name}}</view>
+            </view>
+        </scroll-view>
+
+        <scroll-view class="goods-container" scroll-y="true" scroll-top="{{scrolltop}}" wx:if='{{onLoadStatus}}'>
+            <view wx:if="{{!goodsList || goodsList.length == 0}}" class="no-data">
+                <view class="line"></view>
+                <view class="txt">暂无商品</view>
+                <view class="line"></view>
+            </view>
+            <view class="goods" wx:for="{{goodsList}}" wx:key="id">
+                <image wx:if="{{item.pic}}" style="border: 1px solid #e64340;" mode="aspectFill" class="pic" src="{{item.pic}}" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <!-- <image class='fresh-tag' src="/images/goods-description/fresh.png"></image> -->
+                </image>
+                <image wx:else style="border: 1px solid #e64340;" mode="aspectFill" class="pic" data-id='{{item.goodsId}}' bindtap="toDetailsTap"></image>
+                <view class="name ellipsis" data-id='{{item.goodsId}}' bindtap="toDetailsTap">
+                    <block wx:if="{{item.mark == 1}}">
+                        <span class="item-status" bindtap="statusChange">推荐</span>
+                    </block>
+                    <block wx:if="{{item.mark == 2}}">
+                        <span class="item-status" bindtap="statusChange">秒杀</span>
+                    </block>
+                    {{item.name}}
+                </view>
+                <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">零售价/¥：</text><text class="price" style="display: inline-block;">{{item.sellPrice}}</text>
+                    </view>
+                </view>
+                <view class='soldInfo'>
+                    <view class='good-price-box'>
+                        <text class="label" style="display: inline-block;">库存/件：</text><text class="price">{{item.numberStore}}</text>
+                    </view>
+                </view>
+                <!-- <view class='soldInfo'>
+                    <view class='good-sales-box'>
+                        <text class="number">库存/件：{{item.numberStore}}</text>
+                    </view>
+                </view> -->
+                <image data-id="{{item.goodsId}}" bindtap="selectGoodsTap" class="car" src="/images/add-addr.png"></image>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+
+<block wx:if="{{selectGoods}}">
+    <view class="sku-mask" bindtap="closePopup"></view>
+    <view class="sku-container">
+        <view class="num">
+            <view class="t">商品id：</view>
+            <view class="num-box">
+                <view>{{selectGoods.goodsId}}</view>
+                <view class="a" wx:if="{{selectGoods.status != 2}}" bindtap="goodsEditTap" style="width: 120px;">编辑商品</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">商品类别:</view>
+            <picker bindchange="categoryChange" value="{{categoryIndex}}" range="{{categoryNames}}" style="margin: 0rpx;padding: 0rpx;width: 400rpx;">
+                <view class="weui-select" style="color: #aaa;border: 1rpx solid #e64340;height: 80rpx;line-height: 80rpx;">{{categoryNames[categoryIndex]}}</view>
+            </picker>
+        </view>
+
+        <view class="num">
+            <view class="t">显示顺序：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="order">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="order" type="digit" value="{{selectGoods.order}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="order">+</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">零售价/¥：</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="sellPrice">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="sellPrice" type="digit" value="{{selectGoods.sellPrice}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="sellPrice">+</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">库存数量</view>
+            <view class="num-box">
+                <view class="a" bindtap="numMinusTap" data-field="numberStore">-</view>
+                <view class="b" style="width: 150px;">
+                    <input style="margin-top: 5px;width: 130px;" bindblur='watchInput' data-field="numberStore" type="number" value="{{selectGoods.numberStore}}" />
+                </view>
+                <view class="a" bindtap="numPlusTap" data-field="numberStore">+</view>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">商品状态</view>
+            <view class="num-box">
+                <block wx:if="{{selectGoods.status == 0}}">
+                    <view class="a" bindtap="statusChange" style="width: 200px;">录入</view>
+                </block>
+                <block wx:if="{{selectGoods.status == 1}}">
+                    <view class="a" bindtap="statusChange" style="width: 200px;">待上架</view>
+                </block>
+                <block wx:if="{{selectGoods.status == 2}}">
+                    <view class="a" bindtap="statusChange" style="width: 200px;">上架</view>
+                </block>
+                <block wx:if="{{selectGoods.status == 3}}">
+                    <view class="a" bindtap="statusChange" style="width: 200px;">下架</view>
+                </block>
+            </view>
+        </view>
+
+        <view class="num">
+            <view class="t">推荐或秒杀</view>
+            <view class="num-box">
+                <block wx:if="{{selectGoods.mark == 0}}">
+                    <view class="a" bindtap="markChange" data-id="0" style="width: 200px;">普通</view>
+                </block>
+                <block wx:if="{{selectGoods.mark == 1}}">
+                    <view class="a" bindtap="markChange" data-id="1" style="width: 200px;">爆款推荐</view>
+                </block>
+                <block wx:if="{{selectGoods.mark == 2}}">
+                    <view class="a" bindtap="markChange" data-id="2" style="width: 200px;">限时秒杀</view>
+                </block>
+            </view>
+        </view>
+
+        <view class="num" wx:if="{{selectGoods.mark == 2}}">
+            <view class="t">秒杀开始</view>
+            <view class="num-box">
+                <view class="b" style="width: 210px;">
+                    <input style="font-size: 16px;" oninput='watchInputStartDate' type="text" value="{{startDate}}" />
+                </view>
+            </view>
+        </view>
+        
+        <view class="num" wx:if="{{selectGoods.mark == 2}}">
+            <view class="t">秒杀结束</view>
+            <view class="num-box">
+                <view class="b" style="width: 210px;">
+                    <input style="font-size: 16px;" oninput='watchInputEndDate' type="text"  value="{{endDate}}" />
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="sku-btn">
+<!--         <view style="width: 50%;display: inline-block;border-right: 1px solid #000;" bindtap="requestRemove">删除商品</view>
+ -->        <view style="width: 50%;display: inline-block;" bindtap="requestUpdate">保存更新</view>
+    </view>
+    
+</block>

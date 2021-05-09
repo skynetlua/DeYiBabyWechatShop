@@ -4,14 +4,14 @@
 [B站开发过程视频](https://www.bilibili.com/video/BV1jh411k72D/)
 
 # 先看效果
-![](./shop1.jpg)
-![](./shop2.jpg)
-![](./qrcode.jpg)
+![商城截图1](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/shop1.jpg)
+![商城截图2](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/shop2.jpg)
+![商城入口](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/qrcode.jpg)
 
 一般奶粉厂商控制渠道价格，在得意baby商城上的产品价格不能标低，正规公司，联系客服会得到非常实惠的价格。
 
 # 开发缘由
-个人开发者在开发[《手机盘》](http://www.bestsellmall.com)的时候，深感项目特别没前途。就为家里人开的母婴店做一个微信小商城《得意baby》。为了能快速完成，在网上找了开源项目，最后找到EastWorldwechat-app-mall，但是没有服务端。只好自己用golang写一个。
+个人开发者在开发[《手机盘》](http://www.bestsellmall.com)的时候，深感项目特别没前途。就为家里人开的母婴店做一个微信小商城《得意baby》。为了能快速完成，在网上找了开源项目，最后找到EastWorld/wechat-app-mall，但是没有服务端。只好自己用golang写一个。
 
 # 技术介绍
 《得意baby》客户端在开源项目EastWorld/wechat-app-mall的基础上，进行性能优化和修改。然后加上简单粗糙的管理后台界面，可以上架和下架商品，查看订单等。整体代码没做多少改变，代码质量一般般，只能凑合着使用。
@@ -26,7 +26,7 @@
 得意baby商城部署只有一个服务器。商品数据走非443端口，图片资源走443端口（CDN只加速web端口），两者要使用不同的域名（比如,https://www.xxx.com:518和https://res.xxx.com:443）。这样做，是为了使用内容分发网络CDN，加速分流图片资源（https://res.xxx.net:443），减轻服务器负担，云服务器费用，特别是宽带费用非常昂贵，个体实体店是无法承担的。
 得意baby商城，购买了[腾讯云特惠云服务器](https://curl.qcloud.com/ZlL1p2dM)，1核2G3M三年只要500元，足够个体实体店使用了。
 
-[![](./tengxunyun.jpg)](https://curl.qcloud.com/ZlL1p2dM)
+[![](https://github.com/skynetlua/DeYiBabyWechatShop/blob/main/tengxunyun.jpg)](https://curl.qcloud.com/ZlL1p2dM)
 
 # 把商城跑起来
 ## 客户端
